@@ -23,49 +23,49 @@ const Header = () => {
           <Typography
             component={Link}
             to="/"
-            sx={{ color: 'white', textDecoration: 'none' }}
+            sx={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}
           >
             대시보드
           </Typography>
           <Typography
             component={Link}
             to="/product"
-            sx={{ color: 'white', textDecoration: 'none' }}
+            sx={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}
           >
             상품
           </Typography>
           <Typography
             component={Link}
             to="/seller"
-            sx={{ color: 'white', textDecoration: 'none' }}
+            sx={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}
           >
             셀러요청
           </Typography>
           <Typography
             component={Link}
             to="/member"
-            sx={{ color: 'white', textDecoration: 'none' }}
+            sx={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}
           >
             회원
           </Typography>
           <Typography
             component={Link}
             to="/order"
-            sx={{ color: 'white', textDecoration: 'none' }}
+            sx={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}
           >
             주문
           </Typography>
           <Typography
             component={Link}
             to="/coupon"
-            sx={{ color: 'white', textDecoration: 'none' }}
+            sx={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}
           >
             쿠폰
           </Typography>
           <Typography
             component={Link}
             to="/event"
-            sx={{ color: 'white', textDecoration: 'none' }}
+            sx={{ color: 'white', textDecoration: 'none', fontWeight: 'bold' }}
           >
             기획전
           </Typography>
