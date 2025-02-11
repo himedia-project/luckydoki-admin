@@ -23,12 +23,25 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DownloadIcon from '@mui/icons-material/Download';
 import Checkbox from '@mui/material/Checkbox';
+import PageComponent from '../../components/common/PageComponent';
+
+const initState = {
+  dtoList: [], // product 목록
+  pageNumList: [],
+  pageRequestDTO: null,
+  prev: false,
+  prevPage: 0,
+  nextPage: 0,
+  next: false,
+  totalCount: 0,
+  current: 0,
+};
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
 
   const [selectedProduct, setSelectedProduct] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
@@ -48,7 +61,8 @@ const ProductPage = () => {
     try {
       const response = await getList(params);
       setProducts(response.dtoList || []);
-      setTotalPages(response.totalPage || 0);
+      const totalPagesCount = Math.ceil(response.totalCount / params.size);
+      setTotalPages(totalPagesCount);
     } catch (error) {
       console.error('상품 목록 로딩 실패:', error);
     }
@@ -313,6 +327,12 @@ const ProductPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        <PageComponent
+          page={page}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
       </Container>
     </div>
   );

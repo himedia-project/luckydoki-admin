@@ -1,7 +1,7 @@
 import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
+
 import NotFoundPage from './pages/NotFoundPage';
 import MainLayout from './layouts/MainLayout';
 import ProductPage from './pages/product/ProductPage';
@@ -10,6 +10,7 @@ import SellerPage from './pages/member/SellerPage';
 import OrderPage from './pages/order/OrderPage';
 import CouponPage from './pages/coupon/CouponPage';
 import EventPage from './pages/event/EventPage';
+import LoginPage from './pages/login/LoginPage';
 
 function App() {
   return (
