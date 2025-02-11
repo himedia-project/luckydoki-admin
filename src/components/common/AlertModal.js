@@ -23,31 +23,31 @@ const AlertModal = ({
       PaperProps={{
         sx: {
           borderRadius: 2,
-          boxShadow: '0 4px 20px rgba(255, 183, 242, 0.25)',
+          boxShadow: '0 4px 20px rgba(0, 222, 144, 0.25)',
         },
       }}
     >
       <DialogTitle
         sx={{
-          bgcolor: isSuccess ? '#FFB7F2' : '#FFE0F7',
-          color: '#2A0934',
+          bgcolor: isSuccess ? '#00DE90' : '#B3F4DC',
+          color: '#004D31',
           fontWeight: 'bold',
         }}
       >
         {title}
       </DialogTitle>
       <DialogContent sx={{ mt: 2 }}>
-        <Typography color="#2A0934">{message}</Typography>
+        <Typography color="#004D31">{message}</Typography>
       </DialogContent>
       <DialogActions sx={{ p: 2 }}>
         <Button
           onClick={onConfirm || onClose}
           sx={{
-            bgcolor: '#FFB7F2',
-            color: '#2A0934',
+            bgcolor: '#00DE90',
+            color: '#004D31',
             fontWeight: 'bold',
             '&:hover': {
-              bgcolor: '#FF9BE8',
+              bgcolor: '#00C580',
             },
           }}
         >
