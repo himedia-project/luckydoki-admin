@@ -7,6 +7,7 @@ import MainLayout from './layouts/MainLayout';
 import ProductPage from './pages/product/ProductPage';
 import MemberPage from './pages/member/MemberPage';
 import SellerPage from './pages/member/SellerPage';
+import OrderPage from './pages/order/OrderPage';
 function App() {
   return (
     <Routes>
@@ -16,6 +17,7 @@ function App() {
         <Route path="/product" element={<ProductPage />} />
         <Route path="/seller" element={<SellerPage />} />
         <Route path="/member" element={<MemberPage />} />
+        <Route path="/order" element={<OrderPage />} />
       </Route>
       {/* 404 */}
       <Route path="*" element={<NotFoundPage />} />
