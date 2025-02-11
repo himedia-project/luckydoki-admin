@@ -17,17 +17,14 @@ import {
   Paper,
   IconButton,
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DownloadIcon from '@mui/icons-material/Download';
 import Checkbox from '@mui/material/Checkbox';
-import { useNavigate } from 'react-router-dom';
 
 const ProductPage = () => {
-  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [page, setPage] = useState(0);
@@ -104,26 +101,18 @@ const ProductPage = () => {
       <Container maxWidth="xl" sx={{ py: 4 }}>
         {/* 상단 헤더 영역 */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-          <Typography
-            variant="h5"
-            sx={{ color: '#1A1A1A', fontWeight: 'bold' }}
-          >
-            상품 관리
-          </Typography>
           <Box>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              sx={{
-                bgcolor: '#00DE90',
-                '&:hover': { bgcolor: '#00C580' },
-                mr: 1,
-                color: 'white',
-              }}
-              onClick={() => navigate('/product/register')}
+            <Typography
+              variant="h5"
+              sx={{ color: '#1A1A1A', fontWeight: 'bold' }}
             >
-              상품 등록
-            </Button>
+              상품 관리
+            </Typography>
+            <Typography variant="subtitle1" sx={{ color: '#666', mt: 1 }}>
+              ✳️ 셀러가 등록한 상품을 관리하는 페이지입니다.
+            </Typography>
+          </Box>
+          <Box>
             <Button
               variant="contained"
               startIcon={<CloudUploadIcon />}
