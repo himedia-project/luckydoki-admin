@@ -20,13 +20,55 @@ const Header = () => {
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <Typography sx={{ color: 'white' }}>대시보드</Typography>
-          <Typography sx={{ color: 'white' }}>상품</Typography>
-          <Typography sx={{ color: 'white' }}>셀러요청</Typography>
-          <Typography sx={{ color: 'white' }}>회원</Typography>
-          <Typography sx={{ color: 'white' }}>주문</Typography>
-          <Typography sx={{ color: 'white' }}>쿠폰</Typography>
-          <Typography sx={{ color: 'white' }}>프로모션</Typography>
+          <Typography
+            component={Link}
+            to="/"
+            sx={{ color: 'white', textDecoration: 'none' }}
+          >
+            대시보드
+          </Typography>
+          <Typography
+            component={Link}
+            to="/product"
+            sx={{ color: 'white', textDecoration: 'none' }}
+          >
+            상품
+          </Typography>
+          <Typography
+            component={Link}
+            to="/seller"
+            sx={{ color: 'white', textDecoration: 'none' }}
+          >
+            셀러요청
+          </Typography>
+          <Typography
+            component={Link}
+            to="/member"
+            sx={{ color: 'white', textDecoration: 'none' }}
+          >
+            회원
+          </Typography>
+          <Typography
+            component={Link}
+            to="/order"
+            sx={{ color: 'white', textDecoration: 'none' }}
+          >
+            주문
+          </Typography>
+          <Typography
+            component={Link}
+            to="/coupon"
+            sx={{ color: 'white', textDecoration: 'none' }}
+          >
+            쿠폰
+          </Typography>
+          <Typography
+            component={Link}
+            to="/event"
+            sx={{ color: 'white', textDecoration: 'none' }}
+          >
+            기획전
+          </Typography>
         </Box>
       </Toolbar>
     </AppBar>
