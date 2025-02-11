@@ -19,17 +19,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 const MemberPage = () => {
-  const [members, setMembers] = useState([
-    // 임시 데이터
-    {
-      id: 1,
-      username: 'test',
-      email: 'test@test.com',
-      phone: '010-1234-5678',
-      createdAt: '2025-01-03 13:15:52',
-      modifiedAt: '2025-01-03 13:15:52',
-    },
-  ]);
+  const [members, setMembers] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
 
   return (
@@ -116,48 +106,58 @@ const MemberPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {members.map((member) => (
-                <TableRow
-                  key={member.id}
-                  hover
-                  sx={{
-                    '&:hover': {
-                      bgcolor: '#F8FFF8',
-                    },
-                  }}
-                >
-                  <TableCell>{member.id}</TableCell>
-                  <TableCell>{member.username}</TableCell>
-                  <TableCell>{member.email}</TableCell>
-                  <TableCell>{member.phone}</TableCell>
-                  <TableCell>{member.createdAt}</TableCell>
-                  <TableCell>{member.modifiedAt}</TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      size="small"
-                      sx={{
-                        color: '#00DE90',
-                        '&:hover': {
-                          bgcolor: 'rgba(0, 222, 144, 0.1)',
-                        },
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      sx={{
-                        color: '#FF6B6B',
-                        '&:hover': {
-                          bgcolor: 'rgba(255, 107, 107, 0.1)',
-                        },
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+              {members.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
+                    <Typography variant="body1" color="text.secondary">
+                      등록된 목록이 없습니다.
+                    </Typography>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                members.map((member) => (
+                  <TableRow
+                    key={member.id}
+                    hover
+                    sx={{
+                      '&:hover': {
+                        bgcolor: '#F8FFF8',
+                      },
+                    }}
+                  >
+                    <TableCell>{member.id}</TableCell>
+                    <TableCell>{member.username}</TableCell>
+                    <TableCell>{member.email}</TableCell>
+                    <TableCell>{member.phone}</TableCell>
+                    <TableCell>{member.createdAt}</TableCell>
+                    <TableCell>{member.modifiedAt}</TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        size="small"
+                        sx={{
+                          color: '#00DE90',
+                          '&:hover': {
+                            bgcolor: 'rgba(0, 222, 144, 0.1)',
+                          },
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        sx={{
+                          color: '#FF6B6B',
+                          '&:hover': {
+                            bgcolor: 'rgba(255, 107, 107, 0.1)',
+                          },
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>

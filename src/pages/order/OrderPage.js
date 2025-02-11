@@ -17,18 +17,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 
 const OrderPage = () => {
-  const [orders, setOrders] = useState([
-    // 임시 데이터
-    {
-      id: 1,
-      orderCode: 'ORD-2024-001',
-      customer: '홍길동',
-      orderDate: '2024-03-20 14:30:00',
-      totalAmount: 150000,
-      status: '주문완료',
-      paymentStatus: '결제완료',
-    },
-  ]);
+  const [orders, setOrders] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
 
   return (
@@ -107,37 +96,49 @@ const OrderPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((order) => (
-                <TableRow
-                  key={order.id}
-                  hover
-                  sx={{
-                    '&:hover': {
-                      bgcolor: '#F8FFF8',
-                    },
-                  }}
-                >
-                  <TableCell>{order.orderCode}</TableCell>
-                  <TableCell>{order.customer}</TableCell>
-                  <TableCell>{order.orderDate}</TableCell>
-                  <TableCell>{order.totalAmount.toLocaleString()}원</TableCell>
-                  <TableCell>{order.status}</TableCell>
-                  <TableCell>{order.paymentStatus}</TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      size="small"
-                      sx={{
-                        color: '#00DE90',
-                        '&:hover': {
-                          bgcolor: 'rgba(0, 222, 144, 0.1)',
-                        },
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
+              {orders.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
+                    <Typography variant="body1" color="text.secondary">
+                      등록된 목록이 없습니다.
+                    </Typography>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                orders.map((order) => (
+                  <TableRow
+                    key={order.id}
+                    hover
+                    sx={{
+                      '&:hover': {
+                        bgcolor: '#F8FFF8',
+                      },
+                    }}
+                  >
+                    <TableCell>{order.orderCode}</TableCell>
+                    <TableCell>{order.customer}</TableCell>
+                    <TableCell>{order.orderDate}</TableCell>
+                    <TableCell>
+                      {order.totalAmount.toLocaleString()}원
+                    </TableCell>
+                    <TableCell>{order.status}</TableCell>
+                    <TableCell>{order.paymentStatus}</TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        size="small"
+                        sx={{
+                          color: '#00DE90',
+                          '&:hover': {
+                            bgcolor: 'rgba(0, 222, 144, 0.1)',
+                          },
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>

@@ -20,17 +20,7 @@ import AlertModal from '../../components/common/AlertModal';
 import * as sellerApi from '../../api/sellerApi';
 
 const SellerPage = () => {
-  const [sellers, setSellers] = useState([
-    // 임시 데이터
-    {
-      id: 1,
-      email: 'seller@test.com',
-      shopImage: 'https://picsum.photos/200/300.jpg',
-      description: '신선한 과일을 판매합니다.',
-      requestAt: '2024-03-20 14:30:00',
-      approved: 'N',
-    },
-  ]);
+  const [sellers, setSellers] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedSeller, setSelectedSeller] = useState(null);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -137,39 +127,51 @@ const SellerPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {sellers.map((seller) => (
-                <TableRow
-                  key={seller.id}
-                  hover
-                  sx={{
-                    '&:hover': { bgcolor: '#F8FFF8' },
-                    bgcolor:
-                      selectedSeller?.id === seller.id ? '#F0FFF0' : 'inherit',
-                  }}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedSeller?.id === seller.id}
-                      onChange={() => handleCheckboxClick(seller)}
-                      disabled={seller.approved === 'Y'}
-                    />
-                  </TableCell>
-                  <TableCell>{seller.id}</TableCell>
-                  <TableCell>{seller.email}</TableCell>
-                  <TableCell>
-                    <img
-                      src={seller.shopImage}
-                      alt="매장 이미지"
-                      style={{ width: 50, height: 50, objectFit: 'cover' }}
-                    />
-                  </TableCell>
-                  <TableCell>{seller.description}</TableCell>
-                  <TableCell>{seller.requestAt}</TableCell>
-                  <TableCell>
-                    {seller.approved === 'Y' ? '승인완료' : '대기중'}
+              {sellers.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
+                    <Typography variant="body1" color="text.secondary">
+                      등록된 목록이 없습니다.
+                    </Typography>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                sellers.map((seller) => (
+                  <TableRow
+                    key={seller.id}
+                    hover
+                    sx={{
+                      '&:hover': { bgcolor: '#F8FFF8' },
+                      bgcolor:
+                        selectedSeller?.id === seller.id
+                          ? '#F0FFF0'
+                          : 'inherit',
+                    }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={selectedSeller?.id === seller.id}
+                        onChange={() => handleCheckboxClick(seller)}
+                        disabled={seller.approved === 'Y'}
+                      />
+                    </TableCell>
+                    <TableCell>{seller.id}</TableCell>
+                    <TableCell>{seller.email}</TableCell>
+                    <TableCell>
+                      <img
+                        src={seller.shopImage}
+                        alt="매장 이미지"
+                        style={{ width: 50, height: 50, objectFit: 'cover' }}
+                      />
+                    </TableCell>
+                    <TableCell>{seller.description}</TableCell>
+                    <TableCell>{seller.requestAt}</TableCell>
+                    <TableCell>
+                      {seller.approved === 'Y' ? '승인완료' : '대기중'}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>
