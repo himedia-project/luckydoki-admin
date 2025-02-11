@@ -128,10 +128,9 @@ const ProductPage = () => {
               variant="contained"
               startIcon={<CloudUploadIcon />}
               sx={{
-                bgcolor: '#00DE90',
-                '&:hover': { bgcolor: '#00C580' },
+                backgroundColor: '#217346',
+                '&:hover': { backgroundColor: '#1a5c38' },
                 mr: 1,
-                color: 'white',
               }}
             >
               엑셀 업로드
@@ -140,9 +139,9 @@ const ProductPage = () => {
               variant="contained"
               startIcon={<DownloadIcon />}
               sx={{
-                bgcolor: '#00DE90',
-                '&:hover': { bgcolor: '#00C580' },
-                color: 'white',
+                backgroundColor: '#217346',
+                '&:hover': { backgroundColor: '#1a5c38' },
+                mr: 1,
               }}
             >
               엑셀 다운로드
@@ -240,78 +239,88 @@ const ProductPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {products.map((product) => (
-                <TableRow
-                  key={product.id}
-                  hover
-                  sx={{
-                    '&:hover': {
-                      bgcolor: '#F8FFF8',
-                    },
-                  }}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedProducts.includes(product.id)}
-                      onChange={() => handleSelectProduct(product.id)}
-                      sx={{
-                        '&.Mui-checked': {
-                          color: '#00DE90',
-                        },
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>{product.id}</TableCell>
-                  <TableCell>{product.categoryName}</TableCell>
-                  <TableCell>{product.name}</TableCell>
-                  <TableCell>{product.price?.toLocaleString()}원</TableCell>
-                  <TableCell>
-                    {product.discountPrice?.toLocaleString()}원
-                  </TableCell>
-                  <TableCell>{product.stockNumber}</TableCell>
-                  <TableCell>
-                    {product.uploadFileNames?.[0] && (
-                      <Box
-                        component="img"
-                        src={`${API_SERVER_HOST}/api/admin/product/view/${product.uploadFileNames[0]}`}
-                        sx={{
-                          width: 40,
-                          height: 40,
-                          objectFit: 'cover',
-                          borderRadius: 1,
-                        }}
-                      />
-                    )}
-                  </TableCell>
-                  <TableCell>{product.createdAt}</TableCell>
-                  <TableCell>{product.modifiedAt}</TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      size="small"
-                      sx={{
-                        color: '#00DE90',
-                        '&:hover': {
-                          bgcolor: 'rgba(0, 222, 144, 0.1)',
-                        },
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      size="small"
-                      sx={{
-                        color: '#FF6B6B',
-                        '&:hover': {
-                          bgcolor: 'rgba(255, 107, 107, 0.1)',
-                        },
-                      }}
-                      onClick={() => handleDeleteClick(product)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+              {products.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={11} align="center" sx={{ py: 3 }}>
+                    <Typography variant="body1" color="text.secondary">
+                      등록된 상품이 없습니다.
+                    </Typography>
                   </TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                products.map((product) => (
+                  <TableRow
+                    key={product.id}
+                    hover
+                    sx={{
+                      '&:hover': {
+                        bgcolor: '#F8FFF8',
+                      },
+                    }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={selectedProducts.includes(product.id)}
+                        onChange={() => handleSelectProduct(product.id)}
+                        sx={{
+                          '&.Mui-checked': {
+                            color: '#00DE90',
+                          },
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>{product.id}</TableCell>
+                    <TableCell>{product.categoryName}</TableCell>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>{product.price?.toLocaleString()}원</TableCell>
+                    <TableCell>
+                      {product.discountPrice?.toLocaleString()}원
+                    </TableCell>
+                    <TableCell>{product.stockNumber}</TableCell>
+                    <TableCell>
+                      {product.uploadFileNames?.[0] && (
+                        <Box
+                          component="img"
+                          src={`${API_SERVER_HOST}/api/admin/product/view/${product.uploadFileNames[0]}`}
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            objectFit: 'cover',
+                            borderRadius: 1,
+                          }}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell>{product.createdAt}</TableCell>
+                    <TableCell>{product.modifiedAt}</TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        size="small"
+                        sx={{
+                          color: '#00DE90',
+                          '&:hover': {
+                            bgcolor: 'rgba(0, 222, 144, 0.1)',
+                          },
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        sx={{
+                          color: '#FF6B6B',
+                          '&:hover': {
+                            bgcolor: 'rgba(255, 107, 107, 0.1)',
+                          },
+                        }}
+                        onClick={() => handleDeleteClick(product)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>

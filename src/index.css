@@ -32,3 +32,12 @@ body {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch; /* iOS 스크롤 최적화 */
 }
+
+/* css 기본세팅 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+}
