@@ -26,6 +26,13 @@ const MemberPage = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
+  // 역할 매핑 객체 추가
+  const roleMapping = {
+    USER: '유저',
+    SELLER: '셀러',
+    ADMIN: '관리자',
+  };
+
   const fetchMembers = async () => {
     const params = {
       page: page,
@@ -109,22 +116,40 @@ const MemberPage = () => {
           <Table>
             <TableHead>
               <TableRow sx={{ bgcolor: '#F8FFF8' }}>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   ID
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
-                  이름
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  등급
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
-                  이메일
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  이름름
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   전화번호
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   등록일
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   수정일
                 </TableCell>
                 <TableCell
@@ -155,12 +180,14 @@ const MemberPage = () => {
                       },
                     }}
                   >
-                    <TableCell>{member.email}</TableCell>
-                    <TableCell>{member.nickName}</TableCell>
-                    <TableCell>{member.email}</TableCell>
-                    <TableCell>{member.phone}</TableCell>
-                    <TableCell>{member.createdAt}</TableCell>
-                    <TableCell>{member.modifiedAt}</TableCell>
+                    <TableCell align="center">{member.email}</TableCell>
+                    <TableCell align="center">
+                      {roleMapping[member.roles[0]] || member.roles[0]}
+                    </TableCell>
+                    <TableCell align="center">{member.nickName}</TableCell>
+                    <TableCell align="center">{member.phone}</TableCell>
+                    <TableCell align="center">{member.createdAt}</TableCell>
+                    <TableCell align="center">{member.modifiedAt}</TableCell>
                     <TableCell align="center">
                       <IconButton
                         size="small"
