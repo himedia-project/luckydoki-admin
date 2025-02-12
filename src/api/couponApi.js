@@ -22,3 +22,18 @@ export const create = async (coupon) => {
   const response = await axiosInstance.post('/coupon', coupon);
   return response.data;
 };
+
+// 쿠폰 발급
+// http://localhost:8080/api/admin/coupon/1/issue
+// {
+//     "emails": [
+//         "test@test.com",
+//         "test2@test.com"
+//     ]
+// }
+export const issueCoupon = async (couponId, emails) => {
+  const response = await axiosInstance.post(`/coupon/${couponId}/issue`, {
+    emails,
+  });
+  return response.data;
+};

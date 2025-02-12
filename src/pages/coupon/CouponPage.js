@@ -22,6 +22,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Checkbox from '@mui/material/Checkbox';
 import PageComponent from '../../components/common/PageComponent';
 import CreateCouponModal from '../../components/coupon/CreateCouponModal';
+import IssueCouponModal from '../../components/coupon/IssueCouponModal';
 
 const CouponPage = () => {
   const [coupons, setCoupons] = useState([]);
@@ -30,6 +31,8 @@ const CouponPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [selectedCoupons, setSelectedCoupons] = useState([]);
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openIssueModal, setOpenIssueModal] = useState(false);
+  const [selectedCouponForIssue, setSelectedCouponForIssue] = useState(null);
 
   const fetchCoupons = async () => {
     const params = {
@@ -118,6 +121,11 @@ const CouponPage = () => {
           color: '#666666',
         };
     }
+  };
+
+  const handleIssueCoupon = (coupon) => {
+    setSelectedCouponForIssue(coupon);
+    setOpenIssueModal(true);
   };
 
   return (
@@ -303,6 +311,7 @@ const CouponPage = () => {
                           color: '#00DE90',
                           '&:hover': { bgcolor: 'rgba(0, 222, 144, 0.1)' },
                         }}
+                        onClick={() => handleIssueCoupon(coupon)}
                       >
                         <EditIcon />
                       </IconButton>
@@ -332,6 +341,16 @@ const CouponPage = () => {
         <CreateCouponModal
           open={openCreateModal}
           onClose={() => setOpenCreateModal(false)}
+          onSuccess={fetchCoupons}
+        />
+
+        <IssueCouponModal
+          open={openIssueModal}
+          onClose={() => {
+            setOpenIssueModal(false);
+            setSelectedCouponForIssue(null);
+          }}
+          coupon={selectedCouponForIssue}
           onSuccess={fetchCoupons}
         />
       </Container>
