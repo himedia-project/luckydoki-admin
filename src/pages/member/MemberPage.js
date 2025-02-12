@@ -17,10 +17,40 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PageComponent from '../../components/common/PageComponent';
+import { getList } from '../../api/memberApi';
 
 const MemberPage = () => {
   const [members, setMembers] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const fetchMembers = async () => {
+    const params = {
+      page: page,
+      size: 10,
+      sort: 'desc',
+      searchKeyword: searchKeyword,
+    };
+
+    try {
+      const response = await getList(params);
+      setMembers(response.dtoList || []);
+      const totalPagesCount = Math.ceil(response.totalCount / params.size);
+      setTotalPages(totalPagesCount);
+    } catch (error) {
+      console.error('회원 목록 로딩 실패:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMembers();
+  }, [page, searchKeyword]);
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
 
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
@@ -52,7 +82,7 @@ const MemberPage = () => {
             onChange={(e) => setSearchKeyword(e.target.value)}
             InputProps={{
               endAdornment: (
-                <IconButton>
+                <IconButton onClick={fetchMembers}>
                   <SearchIcon sx={{ color: '#00DE90' }} />
                 </IconButton>
               ),
@@ -117,7 +147,7 @@ const MemberPage = () => {
               ) : (
                 members.map((member) => (
                   <TableRow
-                    key={member.id}
+                    key={member.email}
                     hover
                     sx={{
                       '&:hover': {
@@ -125,8 +155,8 @@ const MemberPage = () => {
                       },
                     }}
                   >
-                    <TableCell>{member.id}</TableCell>
-                    <TableCell>{member.username}</TableCell>
+                    <TableCell>{member.email}</TableCell>
+                    <TableCell>{member.nickName}</TableCell>
                     <TableCell>{member.email}</TableCell>
                     <TableCell>{member.phone}</TableCell>
                     <TableCell>{member.createdAt}</TableCell>
@@ -161,6 +191,12 @@ const MemberPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        <PageComponent
+          page={page}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
       </Container>
     </div>
   );
