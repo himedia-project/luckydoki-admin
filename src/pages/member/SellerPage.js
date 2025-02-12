@@ -63,16 +63,10 @@ const SellerPage = () => {
     if (selectedSeller) {
       try {
         await sellerApi.approve(selectedSeller.id);
-        // 승인 후 데이터 업데이트
-        setSellers(
-          sellers.map((seller) =>
-            seller.id === selectedSeller.id
-              ? { ...seller, approved: 'Y' }
-              : seller,
-          ),
-        );
         setAlertOpen(true);
         setSelectedSeller(null);
+        // 승인 후 즉시 목록 새로고침
+        fetchSellers();
       } catch (error) {
         console.error('승인 처리 중 오류 발생:', error);
       }
