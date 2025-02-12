@@ -11,6 +11,7 @@ import OrderPage from './pages/order/OrderPage';
 import CouponPage from './pages/coupon/CouponPage';
 import EventPage from './pages/event/EventPage';
 import LoginPage from './pages/login/LoginPage';
+import IssuedCouponPage from './pages/coupon/IssuedCouponPage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/member" element={<MemberPage />} />
         <Route path="/order" element={<OrderPage />} />
         <Route path="/coupon" element={<CouponPage />} />
+        <Route path="/issued-coupon" element={<IssuedCouponPage />} />
         <Route path="/event" element={<EventPage />} />
       </Route>
       {/* 404 */}

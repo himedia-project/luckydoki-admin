@@ -23,6 +23,7 @@ import Checkbox from '@mui/material/Checkbox';
 import PageComponent from '../../components/common/PageComponent';
 import CreateCouponModal from '../../components/coupon/CreateCouponModal';
 import IssueCouponModal from '../../components/coupon/IssueCouponModal';
+import { useNavigate } from 'react-router-dom';
 
 const CouponPage = () => {
   const [coupons, setCoupons] = useState([]);
@@ -33,6 +34,7 @@ const CouponPage = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openIssueModal, setOpenIssueModal] = useState(false);
   const [selectedCouponForIssue, setSelectedCouponForIssue] = useState(null);
+  const navigate = useNavigate();
 
   const fetchCoupons = async () => {
     const params = {
@@ -144,17 +146,32 @@ const CouponPage = () => {
               ✳️ 발행된 쿠폰을 관리하는 페이지입니다.
             </Typography>
           </Box>
-          <Button
-            variant="contained"
-            onClick={() => setOpenCreateModal(true)}
-            sx={{
-              bgcolor: '#00DE90',
-              '&:hover': { bgcolor: '#00BA78' },
-              height: 'fit-content',
-            }}
-          >
-            쿠폰 등록
-          </Button>
+          <Box sx={{ display: 'flex', gap: 2, height: 'fit-content' }}>
+            <Button
+              variant="outlined"
+              onClick={() => navigate('/issued-coupon')}
+              sx={{
+                color: '#00DE90',
+                borderColor: '#00DE90',
+                '&:hover': {
+                  borderColor: '#00BA78',
+                  backgroundColor: 'rgba(0, 222, 144, 0.1)',
+                },
+              }}
+            >
+              발급 목록
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => setOpenCreateModal(true)}
+              sx={{
+                bgcolor: '#00DE90',
+                '&:hover': { bgcolor: '#00BA78' },
+              }}
+            >
+              쿠폰 등록
+            </Button>
+          </Box>
         </Box>
 
         {/* 검색 영역 */}

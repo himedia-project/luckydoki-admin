@@ -37,3 +37,14 @@ export const issueCoupon = async (couponId, emails) => {
   });
   return response.data;
 };
+
+// 쿠폰 발급 리스트
+// http://localhost:8080/api/admin/coupon-record/list
+
+export const getIssuedList = async (pageParam) => {
+  const { page, size, sort, searchKeyword } = pageParam;
+  const response = await axiosInstance.get('/coupon-record/list', {
+    params: { page, size, sort, searchKeyword },
+  });
+  return response.data;
+};
