@@ -6,4 +6,5 @@ export const getList = async (pageParam) => {
   const response = await axiosInstance.get('/coupon/list', {
     params: { page, size, sort, searchKeyword },
   });
+  return response.data;
 };

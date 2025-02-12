@@ -6,4 +6,6 @@ export const getList = async (pageParam) => {
   const response = await axiosInstance.get('/event/list', {
     params: { page, size, sort, searchKeyword },
   });
+
+  return response.data;
 };
