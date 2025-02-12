@@ -73,6 +73,21 @@ const SellerPage = () => {
     }
   };
 
+  // 상태별 스타일 지정
+  const getStatusStyle = (approved) => {
+    if (approved === 'Y') {
+      return {
+        backgroundColor: '#E6FFF2',
+        color: '#00BA78',
+      };
+    } else {
+      return {
+        backgroundColor: '#E3F2FD',
+        color: '#1976D2',
+      };
+    }
+  };
+
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -129,26 +144,47 @@ const SellerPage = () => {
           <Table>
             <TableHead>
               <TableRow sx={{ bgcolor: '#F8FFF8' }}>
-                <TableCell padding="checkbox" />
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell padding="checkbox" align="center" />
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  align="center"
+                >
                   ID
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  align="center"
+                >
                   신청자
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  align="center"
+                >
                   샵이름
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  align="center"
+                >
                   샵 이미지
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  align="center"
+                >
                   설명
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  align="center"
+                >
                   요청일시
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  align="center"
+                >
                   승인상태
                 </TableCell>
               </TableRow>
@@ -175,27 +211,38 @@ const SellerPage = () => {
                           : 'inherit',
                     }}
                   >
-                    <TableCell padding="checkbox">
+                    <TableCell padding="checkbox" align="center">
                       <Checkbox
                         checked={selectedSeller?.id === seller.id}
                         onChange={() => handleCheckboxClick(seller)}
                         disabled={seller.approved === 'Y'}
                       />
                     </TableCell>
-                    <TableCell>{seller.id}</TableCell>
-                    <TableCell>{seller.email}</TableCell>
-                    <TableCell>{seller.nickName}</TableCell>
-                    <TableCell>
+                    <TableCell align="center">{seller.id}</TableCell>
+                    <TableCell align="center">{seller.email}</TableCell>
+                    <TableCell align="center">{seller.nickName}</TableCell>
+                    <TableCell align="center">
                       <img
                         src={`${API_SERVER_HOST}/api/image/view/${seller.shopImage}`}
                         alt="매장 이미지"
                         style={{ width: 50, height: 50, objectFit: 'cover' }}
                       />
                     </TableCell>
-                    <TableCell>{seller.introduction}</TableCell>
-                    <TableCell>{seller.requestAt}</TableCell>
-                    <TableCell>
-                      {seller.approved === 'Y' ? '승인완료' : '대기중'}
+                    <TableCell align="center">{seller.introduction}</TableCell>
+                    <TableCell align="center">{seller.requestAt}</TableCell>
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          display: 'inline-block',
+                          px: 1.5,
+                          py: 0.5,
+                          borderRadius: 1,
+                          fontSize: '0.875rem',
+                          ...getStatusStyle(seller.approved),
+                        }}
+                      >
+                        {seller.approved === 'Y' ? '승인완료' : '대기중'}
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))

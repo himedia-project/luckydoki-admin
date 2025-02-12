@@ -211,31 +211,58 @@ const ProductPage = () => {
                     onChange={handleSelectAll}
                   />
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   ID
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   카테고리
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   상품명
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   가격
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   할인가격
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   재고
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   이미지
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   등록일
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   수정일
                 </TableCell>
                 <TableCell
@@ -277,15 +304,17 @@ const ProductPage = () => {
                         }}
                       />
                     </TableCell>
-                    <TableCell>{product.id}</TableCell>
-                    <TableCell>{product.categoryName}</TableCell>
-                    <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.price?.toLocaleString()}원</TableCell>
-                    <TableCell>
+                    <TableCell align="center">{product.id}</TableCell>
+                    <TableCell align="center">{product.categoryName}</TableCell>
+                    <TableCell align="center">{product.name}</TableCell>
+                    <TableCell align="center">
+                      {product.price?.toLocaleString()}원
+                    </TableCell>
+                    <TableCell align="center">
                       {product.discountPrice?.toLocaleString()}원
                     </TableCell>
-                    <TableCell>{product.stockNumber}</TableCell>
-                    <TableCell>
+                    <TableCell align="center">{product.stockNumber}</TableCell>
+                    <TableCell align="center">
                       {product.uploadFileNames?.[0] && (
                         <Box
                           component="img"
@@ -299,8 +328,8 @@ const ProductPage = () => {
                         />
                       )}
                     </TableCell>
-                    <TableCell>{product.createdAt}</TableCell>
-                    <TableCell>{product.modifiedAt}</TableCell>
+                    <TableCell align="center">{product.createdAt}</TableCell>
+                    <TableCell align="center">{product.modifiedAt}</TableCell>
                     <TableCell align="center">
                       <IconButton
                         size="small"
