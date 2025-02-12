@@ -8,3 +8,17 @@ export const getList = async (pageParam) => {
   });
   return response.data;
 };
+
+// POST http://localhost:8080/api/admin/coupon
+// {
+//     "name": "",
+//     "content": "",
+//     "startDate": "",
+//     "endDate": ""
+
+//   }
+
+export const create = async (coupon) => {
+  const response = await axiosInstance.post('/coupon', coupon);
+  return response.data;
+};

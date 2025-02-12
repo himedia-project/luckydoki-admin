@@ -21,6 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import Checkbox from '@mui/material/Checkbox';
 import PageComponent from '../../components/common/PageComponent';
+import CreateCouponModal from '../../components/coupon/CreateCouponModal';
 
 const CouponPage = () => {
   const [coupons, setCoupons] = useState([]);
@@ -28,6 +29,7 @@ const CouponPage = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [selectedCoupons, setSelectedCoupons] = useState([]);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
 
   const fetchCoupons = async () => {
     const params = {
@@ -77,6 +79,47 @@ const CouponPage = () => {
     setPage(1);
   };
 
+  const getCouponStatusText = (status) => {
+    const statusMap = {
+      ACTIVE: '활성화',
+      INACTIVE: '비활성화',
+      ISSUED: '발급',
+      EXPIRED: '만료',
+    };
+    return statusMap[status] || status;
+  };
+
+  // 상태별 스타일 지정
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case 'ACTIVE':
+        return {
+          backgroundColor: '#E6FFF2',
+          color: '#00BA78',
+        };
+      case 'INACTIVE':
+        return {
+          backgroundColor: '#F5F5F5',
+          color: '#666666',
+        };
+      case 'ISSUED':
+        return {
+          backgroundColor: '#E3F2FD',
+          color: '#1976D2',
+        };
+      case 'EXPIRED':
+        return {
+          backgroundColor: '#FFEBEE',
+          color: '#D32F2F',
+        };
+      default:
+        return {
+          backgroundColor: '#F5F5F5',
+          color: '#666666',
+        };
+    }
+  };
+
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -93,6 +136,17 @@ const CouponPage = () => {
               ✳️ 발행된 쿠폰을 관리하는 페이지입니다.
             </Typography>
           </Box>
+          <Button
+            variant="contained"
+            onClick={() => setOpenCreateModal(true)}
+            sx={{
+              bgcolor: '#00DE90',
+              '&:hover': { bgcolor: '#00BA78' },
+              height: 'fit-content',
+            }}
+          >
+            쿠폰 등록
+          </Button>
         </Box>
 
         {/* 검색 영역 */}
@@ -141,25 +195,46 @@ const CouponPage = () => {
                     onChange={handleSelectAll}
                   />
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   ID
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
-                  쿠폰 코드
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  코드
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   쿠폰명
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   설명
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   시작일
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   종료일
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   상태
                 </TableCell>
                 <TableCell
@@ -201,13 +276,26 @@ const CouponPage = () => {
                         }}
                       />
                     </TableCell>
-                    <TableCell>{coupon.id}</TableCell>
-                    <TableCell>{coupon.code}</TableCell>
-                    <TableCell>{coupon.name}</TableCell>
-                    <TableCell>{coupon.content}</TableCell>
-                    <TableCell>{coupon.startDate}</TableCell>
-                    <TableCell>{coupon.endDate}</TableCell>
-                    <TableCell>{coupon.status}</TableCell>
+                    <TableCell align="center">{coupon.id}</TableCell>
+                    <TableCell align="center">{coupon.code}</TableCell>
+                    <TableCell align="center">{coupon.name}</TableCell>
+                    <TableCell align="center">{coupon.content}</TableCell>
+                    <TableCell align="center">{coupon.startDate}</TableCell>
+                    <TableCell align="center">{coupon.endDate}</TableCell>
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          display: 'inline-block',
+                          px: 1.5,
+                          py: 0.5,
+                          borderRadius: 1,
+                          fontSize: '0.875rem',
+                          ...getStatusStyle(coupon.status),
+                        }}
+                      >
+                        {getCouponStatusText(coupon.status)}
+                      </Box>
+                    </TableCell>
                     <TableCell align="center">
                       <IconButton
                         size="small"
@@ -239,6 +327,12 @@ const CouponPage = () => {
           page={page}
           totalPages={totalPages}
           handlePageChange={handlePageChange}
+        />
+
+        <CreateCouponModal
+          open={openCreateModal}
+          onClose={() => setOpenCreateModal(false)}
+          onSuccess={fetchCoupons}
         />
       </Container>
     </div>
