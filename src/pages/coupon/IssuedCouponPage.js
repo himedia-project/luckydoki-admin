@@ -1,39 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getIssuedList } from '../../api/couponApi';
 import {
   Container,
   Typography,
-  Box,
-  Paper,
   TextField,
-  IconButton,
+  Box,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Paper,
+  IconButton,
+  Chip,
   Button,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import PageComponent from '../../components/common/PageComponent';
-import { getList } from '../../api/memberApi';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useNavigate } from 'react-router-dom';
 
-const MemberPage = () => {
-  const [members, setMembers] = useState([]);
+const IssuedCouponPage = () => {
+  const navigate = useNavigate();
+  const [issuedCoupons, setIssuedCoupons] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  // 역할 매핑 객체 추가
-  const roleMapping = {
-    USER: '유저',
-    SELLER: '셀러',
-    ADMIN: '관리자',
-  };
-
-  const fetchMembers = async () => {
+  const fetchIssuedCoupons = async () => {
     const params = {
       page: page,
       size: 10,
@@ -42,21 +37,25 @@ const MemberPage = () => {
     };
 
     try {
-      const response = await getList(params);
-      setMembers(response.dtoList || []);
-      const totalPagesCount = Math.ceil(response.totalCount / params.size);
-      setTotalPages(totalPagesCount);
+      const response = await getIssuedList(params);
+      setIssuedCoupons(response.dtoList || []);
+      setTotalPages(response.totalPage);
     } catch (error) {
-      console.error('회원 목록 로딩 실패:', error);
+      console.error('발급된 쿠폰 목록 로딩 실패:', error);
     }
   };
 
   useEffect(() => {
-    fetchMembers();
+    fetchIssuedCoupons();
   }, [page, searchKeyword]);
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
+  };
+
+  const handleSearchKeywordChange = (e) => {
+    setSearchKeyword(e.target.value);
+    setPage(1);
   };
 
   return (
@@ -64,32 +63,46 @@ const MemberPage = () => {
       <Container maxWidth="xl" sx={{ py: 4 }}>
         {/* 상단 헤더 영역 */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-          <Typography
-            variant="h5"
-            sx={{ color: '#1A1A1A', fontWeight: 'bold' }}
-          >
-            회원 관리
-          </Typography>
+          <Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+              <Button
+                startIcon={<ArrowBackIcon />}
+                onClick={() => navigate('/coupon')}
+                sx={{
+                  color: '#666',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                  },
+                }}
+              >
+                쿠폰 목록
+              </Button>
+              <Typography
+                variant="h5"
+                sx={{ color: '#1A1A1A', fontWeight: 'bold' }}
+              >
+                발급된 쿠폰 목록
+              </Typography>
+            </Box>
+            <Typography variant="subtitle1" sx={{ color: '#666', mt: 1 }}>
+              ✳️ 회원들에게 발급된 쿠폰을 조회하는 페이지입니다.
+            </Typography>
+          </Box>
         </Box>
 
         {/* 검색 영역 */}
         <Paper
-          sx={{
-            p: 2,
-            mb: 3,
-            borderRadius: 2,
-            border: '1px solid #E5E5E5',
-          }}
+          sx={{ p: 2, mb: 3, borderRadius: 2, border: '1px solid #E5E5E5' }}
         >
           <TextField
             fullWidth
             size="small"
-            placeholder="회원명 검색"
+            placeholder="쿠폰명 또는 이메일로 검색"
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+            onChange={handleSearchKeywordChange}
             InputProps={{
               endAdornment: (
-                <IconButton onClick={fetchMembers}>
+                <IconButton onClick={fetchIssuedCoupons}>
                   <SearchIcon sx={{ color: '#00DE90' }} />
                 </IconButton>
               ),
@@ -108,10 +121,7 @@ const MemberPage = () => {
         {/* 테이블 영역 */}
         <TableContainer
           component={Paper}
-          sx={{
-            borderRadius: 2,
-            border: '1px solid #E5E5E5',
-          }}
+          sx={{ borderRadius: 2, border: '1px solid #E5E5E5' }}
         >
           <Table>
             <TableHead>
@@ -126,53 +136,59 @@ const MemberPage = () => {
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  등급
+                  쿠폰명
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  이름
+                  쿠폰코드
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  전화번호
+                  발급대상
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  등록일
+                  유효기간
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  수정일
+                  사용여부
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  관리
+                  사용일시
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  발급일시
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {members.length === 0 ? (
+              {issuedCoupons.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
+                  <TableCell colSpan={8} align="center" sx={{ py: 3 }}>
                     <Typography variant="body1" color="text.secondary">
-                      등록된 목록이 없습니다.
+                      발급된 쿠폰이 없습니다.
                     </Typography>
                   </TableCell>
                 </TableRow>
               ) : (
-                members.map((member) => (
+                issuedCoupons.map((coupon) => (
                   <TableRow
-                    key={member.email}
+                    key={coupon.id}
                     hover
                     sx={{
                       '&:hover': {
@@ -180,38 +196,24 @@ const MemberPage = () => {
                       },
                     }}
                   >
-                    <TableCell align="center">{member.email}</TableCell>
+                    <TableCell align="center">{coupon.id}</TableCell>
+                    <TableCell align="center">{coupon.name}</TableCell>
+                    <TableCell align="center">{coupon.code}</TableCell>
+                    <TableCell align="center">{coupon.email}</TableCell>
+                    <TableCell align="center">{coupon.validPeriod}일</TableCell>
                     <TableCell align="center">
-                      {roleMapping[member.roles[0]] || member.roles[0]}
+                      <Chip
+                        label={coupon.used ? '사용완료' : '미사용'}
+                        sx={{
+                          backgroundColor: coupon.used ? '#FFEBEE' : '#E6FFF2',
+                          color: coupon.used ? '#D32F2F' : '#00BA78',
+                        }}
+                      />
                     </TableCell>
-                    <TableCell align="center">{member.nickName}</TableCell>
-                    <TableCell align="center">{member.phone}</TableCell>
-                    <TableCell align="center">{member.createdAt}</TableCell>
-                    <TableCell align="center">{member.modifiedAt}</TableCell>
                     <TableCell align="center">
-                      <IconButton
-                        size="small"
-                        sx={{
-                          color: '#00DE90',
-                          '&:hover': {
-                            bgcolor: 'rgba(0, 222, 144, 0.1)',
-                          },
-                        }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        size="small"
-                        sx={{
-                          color: '#FF6B6B',
-                          '&:hover': {
-                            bgcolor: 'rgba(255, 107, 107, 0.1)',
-                          },
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      {coupon.usedDateTime || '-'}
                     </TableCell>
+                    <TableCell align="center">{coupon.issuedAt}</TableCell>
                   </TableRow>
                 ))
               )}
@@ -229,4 +231,4 @@ const MemberPage = () => {
   );
 };
 
-export default MemberPage;
+export default IssuedCouponPage;

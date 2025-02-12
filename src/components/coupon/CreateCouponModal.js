@@ -14,6 +14,7 @@ const CreateCouponModal = ({ open, onClose, onSuccess }) => {
   const [couponData, setCouponData] = useState({
     name: '',
     content: '',
+    discountPrice: '',
     startDate: '',
     endDate: '',
   });
@@ -31,7 +32,13 @@ const CreateCouponModal = ({ open, onClose, onSuccess }) => {
       await create(couponData);
       onSuccess();
       onClose();
-      setCouponData({ name: '', content: '', startDate: '', endDate: '' });
+      setCouponData({
+        name: '',
+        content: '',
+        discountPrice: '',
+        startDate: '',
+        endDate: '',
+      });
     } catch (error) {
       console.error('쿠폰 등록 실패:', error);
     }
@@ -61,6 +68,18 @@ const CreateCouponModal = ({ open, onClose, onSuccess }) => {
             multiline
             rows={3}
             required
+          />
+          <TextField
+            name="discountPrice"
+            label="할인 금액"
+            type="number"
+            value={couponData.discountPrice}
+            onChange={handleChange}
+            fullWidth
+            required
+            InputProps={{
+              inputProps: { min: 0 },
+            }}
           />
           <TextField
             name="startDate"

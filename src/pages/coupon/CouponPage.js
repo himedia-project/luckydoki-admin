@@ -248,6 +248,12 @@ const CouponPage = () => {
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
+                  할인 금액
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   시작일
                 </TableCell>
                 <TableCell
@@ -305,6 +311,9 @@ const CouponPage = () => {
                     <TableCell align="center">{coupon.code}</TableCell>
                     <TableCell align="center">{coupon.name}</TableCell>
                     <TableCell align="center">{coupon.content}</TableCell>
+                    <TableCell align="center">
+                      {coupon.discountPrice?.toLocaleString()}원
+                    </TableCell>
                     <TableCell align="center">{coupon.startDate}</TableCell>
                     <TableCell align="center">{coupon.endDate}</TableCell>
                     <TableCell align="center">
