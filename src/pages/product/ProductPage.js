@@ -110,6 +110,11 @@ const ProductPage = () => {
     }
   };
 
+  const handleSearchKeywordChange = (e) => {
+    setSearchKeyword(e.target.value);
+    setPage(1);
+  };
+
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -166,7 +171,7 @@ const ProductPage = () => {
             size="small"
             placeholder="상품명 검색"
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+            onChange={handleSearchKeywordChange}
             InputProps={{
               endAdornment: (
                 <IconButton onClick={fetchProducts}>
