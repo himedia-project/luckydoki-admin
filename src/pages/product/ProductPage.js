@@ -284,7 +284,7 @@ const ProductPage = () => {
                       {product.uploadFileNames?.[0] && (
                         <Box
                           component="img"
-                          src={`${API_SERVER_HOST}/api/admin/product/view/${product.uploadFileNames[0]}`}
+                          src={`${API_SERVER_HOST}/api/image/view/${product.uploadFileNames[0]}`}
                           sx={{
                             width: 40,
                             height: 40,

@@ -18,12 +18,42 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import AlertModal from '../../components/common/AlertModal';
 import * as sellerApi from '../../api/sellerApi';
+import PageComponent from '../../components/common/PageComponent';
+import { API_SERVER_HOST } from '../../config/apiConfig';
 
 const SellerPage = () => {
   const [sellers, setSellers] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedSeller, setSelectedSeller] = useState(null);
   const [alertOpen, setAlertOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const fetchSellers = async () => {
+    const params = {
+      page: page,
+      size: 10,
+      sort: 'desc',
+      searchKeyword: searchKeyword,
+    };
+
+    try {
+      const response = await sellerApi.getList(params);
+      setSellers(response.dtoList || []);
+      const totalPagesCount = Math.ceil(response.totalCount / params.size);
+      setTotalPages(totalPagesCount);
+    } catch (error) {
+      console.error('셀러 목록 로딩 실패:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSellers();
+  }, [page, searchKeyword]);
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
 
   const handleCheckboxClick = (seller) => {
     setSelectedSeller(selectedSeller?.id === seller.id ? null : seller);
@@ -110,7 +140,10 @@ const SellerPage = () => {
                   ID
                 </TableCell>
                 <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
-                  이메일
+                  신청자
+                </TableCell>
+                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                  샵이름
                 </TableCell>
                 <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
                   샵 이미지
@@ -157,14 +190,15 @@ const SellerPage = () => {
                     </TableCell>
                     <TableCell>{seller.id}</TableCell>
                     <TableCell>{seller.email}</TableCell>
+                    <TableCell>{seller.nickName}</TableCell>
                     <TableCell>
                       <img
-                        src={seller.shopImage}
+                        src={`${API_SERVER_HOST}/api/image/view/${seller.shopImage}`}
                         alt="매장 이미지"
                         style={{ width: 50, height: 50, objectFit: 'cover' }}
                       />
                     </TableCell>
-                    <TableCell>{seller.description}</TableCell>
+                    <TableCell>{seller.introduction}</TableCell>
                     <TableCell>{seller.requestAt}</TableCell>
                     <TableCell>
                       {seller.approved === 'Y' ? '승인완료' : '대기중'}
@@ -175,11 +209,20 @@ const SellerPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        <PageComponent
+          page={page}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
       </Container>
 
       <AlertModal
         open={alertOpen}
-        onClose={() => setAlertOpen(false)}
+        onClose={() => {
+          setAlertOpen(false);
+          fetchSellers(); // 승인 후 목록 새로고침
+        }}
         title="승인 완료"
         message="요청한 셀러승인요청을 완료하였습니다"
         isSuccess={true}

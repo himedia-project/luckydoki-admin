@@ -62,7 +62,7 @@ const Header = () => {
               fontWeight: 'bold',
             }}
           >
-            LuckyDoki 쇼핑몰 관리페이지
+            LuckyDoki 관리페이지
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
