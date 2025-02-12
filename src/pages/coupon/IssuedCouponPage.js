@@ -136,14 +136,15 @@ const IssuedCouponPage = () => {
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  쿠폰명
+                  쿠폰코드
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  쿠폰코드
+                  쿠폰명
                 </TableCell>
+
                 <TableCell
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
@@ -197,8 +198,8 @@ const IssuedCouponPage = () => {
                     }}
                   >
                     <TableCell align="center">{coupon.id}</TableCell>
-                    <TableCell align="center">{coupon.name}</TableCell>
                     <TableCell align="center">{coupon.code}</TableCell>
+                    <TableCell align="center">{coupon.name}</TableCell>
                     <TableCell align="center">{coupon.email}</TableCell>
                     <TableCell align="center">{coupon.validPeriod}일</TableCell>
                     <TableCell align="center">
