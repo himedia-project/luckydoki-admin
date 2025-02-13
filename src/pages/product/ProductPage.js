@@ -227,6 +227,12 @@ const ProductPage = () => {
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
+                  샵이름
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   상품명
                 </TableCell>
                 <TableCell
@@ -306,6 +312,7 @@ const ProductPage = () => {
                     </TableCell>
                     <TableCell align="center">{product.id}</TableCell>
                     <TableCell align="center">{product.categoryName}</TableCell>
+                    <TableCell align="center">{product.shopName}</TableCell>
                     <TableCell align="center">{product.name}</TableCell>
                     <TableCell align="center">
                       {product.price?.toLocaleString()}원

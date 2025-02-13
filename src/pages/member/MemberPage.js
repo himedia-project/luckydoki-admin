@@ -26,11 +26,11 @@ const MemberPage = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  // 역할 매핑 객체 추가
+  // 역할 매핑 객체에 색상 정보 추가
   const roleMapping = {
-    USER: '유저',
-    SELLER: '셀러',
-    ADMIN: '관리자',
+    USER: { label: '유저', color: '#4A90E2' }, // 파란색
+    SELLER: { label: '셀러', color: '#00DE90' }, // 초록색
+    ADMIN: { label: '관리자', color: '#1A1A1A' }, // 검정색
   };
 
   const fetchMembers = async () => {
@@ -132,7 +132,7 @@ const MemberPage = () => {
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  이름
+                  샵이름
                 </TableCell>
                 <TableCell
                   align="center"
@@ -182,7 +182,16 @@ const MemberPage = () => {
                   >
                     <TableCell align="center">{member.email}</TableCell>
                     <TableCell align="center">
-                      {roleMapping[member.roles[0]] || member.roles[0]}
+                      <Typography
+                        component="span"
+                        sx={{
+                          color:
+                            roleMapping[member.roles[0]]?.color || '#1A1A1A',
+                          fontWeight: 'medium',
+                        }}
+                      >
+                        {roleMapping[member.roles[0]]?.label || member.roles[0]}
+                      </Typography>
                     </TableCell>
                     <TableCell align="center">{member.nickName}</TableCell>
                     <TableCell align="center">{member.phone}</TableCell>
