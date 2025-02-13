@@ -416,7 +416,7 @@ const ProductPage = () => {
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ minWidth: 100, fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   이벤트여부
                 </TableCell>
