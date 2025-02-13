@@ -16,3 +16,10 @@ export const register = async (event) => {
   const response = await axiosInstance.post('/event', event);
   return response.data;
 };
+
+// 이벤트 삭제
+// DELETE http://localhost:8080/api/admin/event/{{id}}
+export const deleteEvent = async (eventId) => {
+  const response = await axiosInstance.delete(`/event/${eventId}`);
+  return response.data;
+};

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getList } from '../../api/eventApi';
+import { getList, deleteEvent } from '../../api/eventApi';
 import { API_SERVER_HOST } from '../../config/apiConfig';
 import {
   Container,
@@ -23,6 +23,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import Checkbox from '@mui/material/Checkbox';
 import PageComponent from '../../components/common/PageComponent';
 import CreateEventModal from '../../components/event/CreateEventModal';
+import AlertModal from '../../components/common/AlertModal';
+import ConfirmModal from '../../components/common/ConfirmModal';
 
 const EventPage = () => {
   const [events, setEvents] = useState([]);
@@ -31,6 +33,10 @@ const EventPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [selectedEvents, setSelectedEvents] = useState([]);
   const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
   const fetchEvents = async () => {
     const params = {
@@ -78,6 +84,28 @@ const EventPage = () => {
   const handleSearchKeywordChange = (e) => {
     setSearchKeyword(e.target.value);
     setPage(1);
+  };
+
+  const handleDeleteClick = (eventId) => {
+    console.log('Delete clicked for eventId:', eventId);
+    setSelectedEventId(eventId);
+    setConfirmOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    console.log('Confirming delete for eventId:', selectedEventId);
+    try {
+      const response = await deleteEvent(selectedEventId);
+      console.log('Delete response:', response);
+      setConfirmOpen(false);
+      setAlertMessage('삭제가 완료되었습니다.');
+      setAlertOpen(true);
+      fetchEvents(); // 목록 새로고침
+    } catch (error) {
+      console.error('이벤트 삭제 중 오류 발생:', error);
+      setAlertMessage('이벤트 삭제 중 오류가 발생했습니다.');
+      setAlertOpen(true);
+    }
   };
 
   return (
@@ -261,6 +289,7 @@ const EventPage = () => {
                       </IconButton>
                       <IconButton
                         size="small"
+                        onClick={() => handleDeleteClick(event.id)}
                         sx={{
                           color: '#FF6B6B',
                           '&:hover': { bgcolor: 'rgba(255, 107, 107, 0.1)' },
@@ -286,6 +315,22 @@ const EventPage = () => {
           open={openCreateModal}
           onClose={() => setOpenCreateModal(false)}
           onSuccess={fetchEvents}
+        />
+
+        <ConfirmModal
+          open={confirmOpen}
+          onClose={() => setConfirmOpen(false)}
+          onConfirm={handleDeleteConfirm}
+          title="삭제 확인"
+          message="정말 삭제하시겠습니까?"
+        />
+
+        <AlertModal
+          open={alertOpen}
+          onClose={() => setAlertOpen(false)}
+          title="알림"
+          message={alertMessage}
+          isSuccess={true}
         />
       </Container>
     </div>
