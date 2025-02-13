@@ -672,12 +672,54 @@ const ProductPage = () => {
                 background: '#555',
               },
             },
+            '& th.sticky, & td.sticky': {
+              position: 'sticky',
+              backgroundColor: 'white',
+              zIndex: 1,
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                bottom: 0,
+                width: '1px',
+                backgroundColor: '#E5E5E5',
+              },
+            },
+            '& th.sticky-0, & td.sticky-0': {
+              left: 0,
+              zIndex: 2,
+            },
+            '& th.sticky-1, & td.sticky-1': {
+              left: 50,
+              zIndex: 2,
+            },
+            '& th.sticky-2, & td.sticky-2': {
+              left: 130,
+              zIndex: 2,
+            },
+            '& th.sticky-3, & td.sticky-3': {
+              left: 280,
+              zIndex: 2,
+            },
+            '& th.sticky-4, & td.sticky-4': {
+              left: 460,
+              zIndex: 2,
+            },
+            '& th.sticky-5, & td.sticky-5': {
+              left: 580,
+              zIndex: 2,
+            },
           }}
         >
           <Table sx={{ minWidth: 2000 }}>
             <TableHead>
               <TableRow sx={{ bgcolor: '#F8FFF8' }}>
-                <TableCell padding="checkbox" sx={{ minWidth: 50 }}>
+                <TableCell
+                  padding="checkbox"
+                  sx={{ minWidth: 50 }}
+                  className="sticky sticky-0"
+                >
                   <Checkbox
                     checked={selectedProducts.length === products.length}
                     indeterminate={
@@ -690,30 +732,35 @@ const ProductPage = () => {
                 <TableCell
                   align="center"
                   sx={{ minWidth: 80, fontWeight: 'bold', color: '#1A1A1A' }}
+                  className="sticky sticky-1"
                 >
                   ID
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ minWidth: 150, fontWeight: 'bold', color: '#1A1A1A' }}
+                  className="sticky sticky-2"
                 >
                   3차 카테고리
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ minWidth: 180, fontWeight: 'bold', color: '#1A1A1A' }}
+                  className="sticky sticky-3"
                 >
                   샵이름
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
+                  className="sticky sticky-4"
                 >
                   이미지
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ minWidth: 250, fontWeight: 'bold', color: '#1A1A1A' }}
+                  className="sticky sticky-5"
                 >
                   상품명
                 </TableCell>
@@ -734,6 +781,12 @@ const ProductPage = () => {
                   sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   이벤트여부
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  할인율
                 </TableCell>
                 <TableCell
                   align="center"
@@ -794,7 +847,7 @@ const ProductPage = () => {
                       },
                     }}
                   >
-                    <TableCell padding="checkbox">
+                    <TableCell padding="checkbox" className="sticky sticky-0">
                       <Checkbox
                         checked={selectedProducts.includes(product.id)}
                         onChange={() => handleSelectProduct(product.id)}
@@ -805,10 +858,16 @@ const ProductPage = () => {
                         }}
                       />
                     </TableCell>
-                    <TableCell align="center">{product.id}</TableCell>
-                    <TableCell align="center">{product.categoryName}</TableCell>
-                    <TableCell align="center">{product.shopName}</TableCell>
-                    <TableCell align="center">
+                    <TableCell align="center" className="sticky sticky-1">
+                      {product.id}
+                    </TableCell>
+                    <TableCell align="center" className="sticky sticky-2">
+                      {product.categoryName}
+                    </TableCell>
+                    <TableCell align="center" className="sticky sticky-3">
+                      {product.shopName}
+                    </TableCell>
+                    <TableCell align="center" className="sticky sticky-4">
                       {product.uploadFileNames?.[0] && (
                         <Box
                           component="img"
@@ -822,7 +881,9 @@ const ProductPage = () => {
                         />
                       )}
                     </TableCell>
-                    <TableCell align="center">{product.name}</TableCell>
+                    <TableCell align="center" className="sticky sticky-5">
+                      {product.name}
+                    </TableCell>
                     <TableCell
                       align="center"
                       sx={{
@@ -849,6 +910,9 @@ const ProductPage = () => {
                       }}
                     >
                       {product.event}
+                    </TableCell>
+                    <TableCell align="center">
+                      {product.discountRate}%
                     </TableCell>
                     <TableCell align="center">
                       {product.price?.toLocaleString()}원
