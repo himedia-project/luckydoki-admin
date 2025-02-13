@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getList, remove } from '../../api/productApi';
+import { getList, remove, changeIsNew, changeBest } from '../../api/productApi';
 import { API_SERVER_HOST } from '../../config/apiConfig';
 import {
   Container,
@@ -205,6 +205,45 @@ const ProductPage = () => {
     }
   };
 
+  // Add new handlers for isNew and Best status changes
+  const handleNewStatusChange = async () => {
+    if (!selectedProducts.length) {
+      setAlertMessage('상품을 먼저 선택해주세요.');
+      setShowAlert(true);
+      return;
+    }
+
+    try {
+      await changeIsNew(selectedProducts);
+      setAlertMessage('최신상품 상태가 변경되었습니다.');
+      setShowAlert(true);
+      fetchProducts(); // Refresh the list
+    } catch (error) {
+      console.error('최신상품 상태 변경 실패:', error);
+      setAlertMessage('상태 변경 중 오류가 발생했습니다.');
+      setShowAlert(true);
+    }
+  };
+
+  const handleBestStatusChange = async () => {
+    if (!selectedProducts.length) {
+      setAlertMessage('상품을 먼저 선택해주세요.');
+      setShowAlert(true);
+      return;
+    }
+
+    try {
+      await changeBest(selectedProducts);
+      setAlertMessage('인기상품 상태가 변경되었습니다.');
+      setShowAlert(true);
+      fetchProducts(); // Refresh the list
+    } catch (error) {
+      console.error('인기상품 상태 변경 실패:', error);
+      setAlertMessage('상태 변경 중 오류가 발생했습니다.');
+      setShowAlert(true);
+    }
+  };
+
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -222,6 +261,28 @@ const ProductPage = () => {
             </Typography>
           </Box>
           <Box>
+            <Button
+              variant="contained"
+              onClick={handleNewStatusChange}
+              sx={{
+                backgroundColor: '#4CAF50',
+                '&:hover': { backgroundColor: '#388E3C' },
+                mr: 1,
+              }}
+            >
+              최신상품 변경
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleBestStatusChange}
+              sx={{
+                backgroundColor: '#FFA000',
+                '&:hover': { backgroundColor: '#F57C00' },
+                mr: 1,
+              }}
+            >
+              인기상품 변경
+            </Button>
             <Button
               variant="contained"
               startIcon={<CloudUploadIcon />}
@@ -287,12 +348,27 @@ const ProductPage = () => {
           sx={{
             borderRadius: 2,
             border: '1px solid #E5E5E5',
+            overflowX: 'auto',
+            '&::-webkit-scrollbar': {
+              height: 10,
+            },
+            '&::-webkit-scrollbar-track': {
+              background: '#f1f1f1',
+              borderRadius: 5,
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: '#888',
+              borderRadius: 5,
+              '&:hover': {
+                background: '#555',
+              },
+            },
           }}
         >
-          <Table>
+          <Table sx={{ minWidth: 2000 }}>
             <TableHead>
               <TableRow sx={{ bgcolor: '#F8FFF8' }}>
-                <TableCell padding="checkbox">
+                <TableCell padding="checkbox" sx={{ minWidth: 50 }}>
                   <Checkbox
                     checked={selectedProducts.length === products.length}
                     indeterminate={
@@ -304,67 +380,85 @@ const ProductPage = () => {
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 80, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   ID
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 150, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   카테고리
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 180, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   샵이름
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 250, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   상품명
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 100, fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  최신여부
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ minWidth: 100, fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  인기여부
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ minWidth: 100, fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  이벤트여부
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   가격
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   할인가격
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 100, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   재고
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   이미지
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 180, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   등록일
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 180, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   수정일
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   관리
                 </TableCell>
@@ -405,6 +499,33 @@ const ProductPage = () => {
                     <TableCell align="center">{product.categoryName}</TableCell>
                     <TableCell align="center">{product.shopName}</TableCell>
                     <TableCell align="center">{product.name}</TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: product.isNew === 'Y' ? '#4CAF50' : '#666',
+                        fontWeight: product.isNew === 'Y' ? 'bold' : 'normal',
+                      }}
+                    >
+                      {product.isNew}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: product.best === 'Y' ? '#FFA000' : '#666',
+                        fontWeight: product.best === 'Y' ? 'bold' : 'normal',
+                      }}
+                    >
+                      {product.best}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: product.event === 'Y' ? '#FF6B6B' : '#666',
+                        fontWeight: product.event === 'Y' ? 'bold' : 'normal',
+                      }}
+                    >
+                      {product.event}
+                    </TableCell>
                     <TableCell align="center">
                       {product.price?.toLocaleString()}원
                     </TableCell>

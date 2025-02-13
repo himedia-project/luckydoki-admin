@@ -54,3 +54,27 @@ export const remove = async (productId) => {
   const response = await axiosInstance.delete(`/product/${productId}`);
   return response.data;
 };
+
+// is-new 변경
+// localhost:8080/api/admin/product/best
+// {
+//   "productIds": [1,2,3]
+// }
+export const changeIsNew = async (productIds) => {
+  const response = await axiosInstance.patch(`/product/best`, {
+    productIds: productIds,
+  });
+  return response.data;
+};
+
+// best 변경
+// localhost:8080/api/admin/product/best
+// {
+//   "productIds": [1,2,3]
+// }
+export const changeBest = async (productIds) => {
+  const response = await axiosInstance.patch(`/product/best`, {
+    productIds: productIds,
+  });
+  return response.data;
+};
