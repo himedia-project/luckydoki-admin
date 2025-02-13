@@ -321,13 +321,22 @@ const ProductPage = () => {
     if (!parentId) {
       setSubCategories([]);
       setChildCategories([]);
+      setSelectedSubId('');
+      setSelectedChildId('');
       return;
     }
     try {
       const data = await getChildList(parentId);
       setSubCategories(data);
+      // 2차 카테고리 중 lastType이 Y인 항목이 있다면 해당 카테고리를 검색에 사용
+      const lastTypeCategory = data.find(
+        (category) => category.lastType === 'Y',
+      );
+      if (lastTypeCategory) {
+        setSelectedChildId(''); // 3차 카테고리 선택 초기화
+        setChildCategories([]); // 3차 카테고리 목록 초기화
+      }
       setSelectedSubId('');
-      setSelectedChildId('');
     } catch (error) {
       console.error('서브 카테고리 로드 실패:', error);
     }
@@ -337,6 +346,7 @@ const ProductPage = () => {
   const loadChildCategories = async (subId) => {
     if (!subId) {
       setChildCategories([]);
+      setSelectedChildId('');
       return;
     }
     try {
@@ -361,13 +371,24 @@ const ProductPage = () => {
   const handleSubCategoryChange = (event) => {
     const subId = event.target.value;
     setSelectedSubId(subId);
-    setSelectedChildId('');
-    loadChildCategories(subId);
+
+    // 선택된 2차 카테고리가 lastType이 Y인지 확인
+    const selectedCategory = subCategories.find(
+      (cat) => cat.id === parseInt(subId),
+    );
+    if (selectedCategory?.lastType === 'Y') {
+      setSelectedChildId(subId); // 검색용 categoryId를 2차 카테고리 ID로 설정
+      setChildCategories([]); // 3차 카테고리 목록 초기화
+    } else {
+      setSelectedChildId(''); // 검색용 categoryId 초기화
+      loadChildCategories(subId); // 3차 카테고리 로드
+    }
   };
 
   // 최하위 카테고리 선택 핸들러
   const handleChildCategoryChange = (event) => {
-    setSelectedChildId(event.target.value);
+    const childId = event.target.value;
+    setSelectedChildId(childId);
   };
 
   // 필터 변경 핸들러 추가
@@ -693,7 +714,7 @@ const ProductPage = () => {
                     select
                     fullWidth
                     size="small"
-                    label="페이지 크기"
+                    label="페이지 사이즈"
                     value={pageSize}
                     onChange={handleSizeChange}
                     sx={{

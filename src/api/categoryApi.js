@@ -27,17 +27,20 @@ export const getParentList = async () => {
 //     {
 //         "id": 5,
 //         "name": "사료/간식",
-//         "logo": null
+//         "logo": null,
+//         "lastType": "N"
 //     },
 //     {
 //         "id": 8,
 //         "name": "반려패션",
-//         "logo": null
+//         "logo": null,
+//         "lastType": "N"
 //     },
 //     {
 //         "id": 11,
 //         "name": "반려용품",
-//         "logo": null
+//         "logo": null,
+//         "lastType": "N"
 //     }
 // ]
 export const getChildList = async (parentId) => {
