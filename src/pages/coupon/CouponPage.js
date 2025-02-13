@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getList } from '../../api/couponApi';
+import { getList, deleteCoupon } from '../../api/couponApi';
 import {
   Container,
   Grid,
@@ -24,6 +24,7 @@ import PageComponent from '../../components/common/PageComponent';
 import CreateCouponModal from '../../components/coupon/CreateCouponModal';
 import IssueCouponModal from '../../components/coupon/IssueCouponModal';
 import { useNavigate } from 'react-router-dom';
+import ConfirmModal from '../../components/common/ConfirmModal';
 
 const CouponPage = () => {
   const [coupons, setCoupons] = useState([]);
@@ -34,6 +35,10 @@ const CouponPage = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openIssueModal, setOpenIssueModal] = useState(false);
   const [selectedCouponForIssue, setSelectedCouponForIssue] = useState(null);
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [openAlertModal, setOpenAlertModal] = useState(false);
+  const [selectedCouponForDelete, setSelectedCouponForDelete] = useState(null);
+  const [alertMessage, setAlertMessage] = useState('');
   const navigate = useNavigate();
 
   const fetchCoupons = async () => {
@@ -128,6 +133,30 @@ const CouponPage = () => {
   const handleIssueCoupon = (coupon) => {
     setSelectedCouponForIssue(coupon);
     setOpenIssueModal(true);
+  };
+
+  const handleDeleteCoupon = async (couponId) => {
+    setSelectedCouponForDelete(couponId);
+    setOpenConfirmModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteCoupon(selectedCouponForDelete);
+      setAlertMessage('쿠폰이 삭제되었습니다.');
+      setOpenAlertModal(true);
+      fetchCoupons();
+    } catch (error) {
+      if (error.response?.data?.errMsg?.includes('Coupon issued to members')) {
+        setAlertMessage('발급된 이력이 있는 쿠폰은 삭제할 수 없습니다.');
+      } else {
+        setAlertMessage('쿠폰 삭제 중 오류가 발생했습니다.');
+      }
+      setOpenAlertModal(true);
+    } finally {
+      setOpenConfirmModal(false);
+      setSelectedCouponForDelete(null);
+    }
   };
 
   return (
@@ -347,6 +376,7 @@ const CouponPage = () => {
                           color: '#FF6B6B',
                           '&:hover': { bgcolor: 'rgba(255, 107, 107, 0.1)' },
                         }}
+                        onClick={() => handleDeleteCoupon(coupon.id)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -378,6 +408,22 @@ const CouponPage = () => {
           }}
           coupon={selectedCouponForIssue}
           onSuccess={fetchCoupons}
+        />
+
+        <ConfirmModal
+          open={openConfirmModal}
+          onClose={() => setOpenConfirmModal(false)}
+          onConfirm={handleConfirmDelete}
+          title="쿠폰 삭제"
+          message="쿠폰을 삭제하시겠습니까?"
+        />
+
+        <ConfirmModal
+          open={openAlertModal}
+          onClose={() => setOpenAlertModal(false)}
+          onConfirm={() => setOpenAlertModal(false)}
+          title="알림"
+          message={alertMessage}
         />
       </Container>
     </div>

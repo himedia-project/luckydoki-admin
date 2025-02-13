@@ -38,6 +38,14 @@ export const issueCoupon = async (couponId, emails) => {
   return response.data;
 };
 
+// 쿠폰 삭제
+// 발급한 이력이 있으면 쿠폰 삭제 x
+// DELETE http://localhost:8080/api/admin/coupon/{{id}}
+export const deleteCoupon = async (id) => {
+  const response = await axiosInstance.delete(`/coupon/${id}`);
+  return response.data;
+};
+
 // 쿠폰 발급 리스트
 // http://localhost:8080/api/admin/coupon-record/list
 
