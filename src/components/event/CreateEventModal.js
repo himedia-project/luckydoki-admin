@@ -35,6 +35,7 @@ const CreateEventModal = ({ open, onClose, onSuccess }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const fetchProducts = async (pageNum, search = '') => {
     try {
@@ -115,9 +116,24 @@ const CreateEventModal = ({ open, onClose, onSuccess }) => {
     }
   };
 
+  const validateImageFile = (file) => {
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (!validTypes.includes(file.type)) {
+      setErrorMessage('JPG, JPEG, PNG, GIF 형식의 이미지만 업로드 가능합니다.');
+      return false;
+    }
+    setErrorMessage('');
+    return true;
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (!validateImageFile(file)) {
+        e.target.value = ''; // 파일 입력 초기화
+        return;
+      }
+
       setFormData((prev) => ({
         ...prev,
         file: file,
@@ -142,6 +158,7 @@ const CreateEventModal = ({ open, onClose, onSuccess }) => {
   useEffect(() => {
     if (!open) {
       setPreviewUrl(null);
+      setErrorMessage('');
     }
   }, [open]);
 
@@ -182,7 +199,7 @@ const CreateEventModal = ({ open, onClose, onSuccess }) => {
           <Box>
             <input
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/jpg,image/png,image/gif"
               id="event-image"
               style={{ display: 'none' }}
               onChange={handleFileChange}
@@ -204,7 +221,17 @@ const CreateEventModal = ({ open, onClose, onSuccess }) => {
                 이미지 선택
               </Button>
             </label>
-
+            {errorMessage && (
+              <Box
+                sx={{
+                  color: 'error.main',
+                  mt: 1,
+                  fontSize: '0.875rem',
+                }}
+              >
+                {errorMessage}
+              </Box>
+            )}
             {previewUrl && (
               <Box
                 sx={{
