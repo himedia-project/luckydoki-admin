@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getList, remove, changeIsNew, changeBest } from '../../api/productApi';
+import { getParentList, getChildList } from '../../api/categoryApi';
 import { API_SERVER_HOST } from '../../config/apiConfig';
 import {
   Container,
@@ -16,6 +17,7 @@ import {
   TableRow,
   Paper,
   IconButton,
+  MenuItem,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -58,13 +60,20 @@ const ProductPage = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
+  const [parentCategories, setParentCategories] = useState([]);
+  const [subCategories, setSubCategories] = useState([]);
+  const [childCategories, setChildCategories] = useState([]);
+  const [selectedParentId, setSelectedParentId] = useState('');
+  const [selectedSubId, setSelectedSubId] = useState('');
+  const [selectedChildId, setSelectedChildId] = useState('');
+
   const fetchProducts = async () => {
     const params = {
       page: page,
       size: 10,
       sort: 'desc',
       searchKeyword: searchKeyword,
-      categoryId: null,
+      categoryId: selectedChildId || null,
     };
 
     try {
@@ -78,8 +87,10 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
-  }, [page, searchKeyword]);
+    if (page > 1) {
+      fetchProducts();
+    }
+  }, [page]);
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -244,6 +255,80 @@ const ProductPage = () => {
     }
   };
 
+  // 최상위 카테고리 로드
+  const loadParentCategories = async () => {
+    try {
+      const data = await getParentList();
+      setParentCategories(data);
+    } catch (error) {
+      console.error('최상위 카테고리 로드 실패:', error);
+    }
+  };
+
+  // 서브 카테고리 로드
+  const loadSubCategories = async (parentId) => {
+    if (!parentId) {
+      setSubCategories([]);
+      setChildCategories([]);
+      return;
+    }
+    try {
+      const data = await getChildList(parentId);
+      setSubCategories(data);
+      setSelectedSubId('');
+      setSelectedChildId('');
+    } catch (error) {
+      console.error('서브 카테고리 로드 실패:', error);
+    }
+  };
+
+  // 최하위 카테고리 로드
+  const loadChildCategories = async (subId) => {
+    if (!subId) {
+      setChildCategories([]);
+      return;
+    }
+    try {
+      const data = await getChildList(subId);
+      setChildCategories(data);
+      setSelectedChildId('');
+    } catch (error) {
+      console.error('최하위 카테고리 로드 실패:', error);
+    }
+  };
+
+  // 최상위 카테고리 선택 핸들러
+  const handleParentCategoryChange = (event) => {
+    const parentId = event.target.value;
+    setSelectedParentId(parentId);
+    setSelectedSubId('');
+    setSelectedChildId('');
+    loadSubCategories(parentId);
+  };
+
+  // 서브 카테고리 선택 핸들러
+  const handleSubCategoryChange = (event) => {
+    const subId = event.target.value;
+    setSelectedSubId(subId);
+    setSelectedChildId('');
+    loadChildCategories(subId);
+  };
+
+  // 최하위 카테고리 선택 핸들러
+  const handleChildCategoryChange = (event) => {
+    setSelectedChildId(event.target.value);
+  };
+
+  // 검색 버튼 클릭 핸들러
+  const handleSearch = () => {
+    setPage(1); // 페이지를 1로 리셋
+    fetchProducts();
+  };
+
+  useEffect(() => {
+    loadParentCategories();
+  }, []);
+
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -318,28 +403,115 @@ const ProductPage = () => {
             border: '1px solid #E5E5E5',
           }}
         >
-          <TextField
-            fullWidth
-            size="small"
-            placeholder="상품명 검색"
-            value={searchKeyword}
-            onChange={handleSearchKeywordChange}
-            InputProps={{
-              endAdornment: (
-                <IconButton onClick={fetchProducts}>
-                  <SearchIcon sx={{ color: '#00DE90' }} />
-                </IconButton>
-              ),
-            }}
-            sx={{
-              maxWidth: 400,
-              '& .MuiOutlinedInput-root': {
-                '&.Mui-focused fieldset': {
-                  borderColor: '#00DE90',
-                },
-              },
-            }}
-          />
+          <Grid container spacing={2} alignItems="center">
+            <Grid item xs={12} sm={2}>
+              <TextField
+                select
+                fullWidth
+                size="small"
+                label="1차 카테고리"
+                value={selectedParentId}
+                onChange={handleParentCategoryChange}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#00DE90',
+                    },
+                  },
+                }}
+              >
+                <MenuItem value="">선택하세요</MenuItem>
+                {parentCategories.map((category) => (
+                  <MenuItem
+                    key={category.categoryId}
+                    value={category.categoryId}
+                  >
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <TextField
+                select
+                fullWidth
+                size="small"
+                label="2차 카테고리"
+                value={selectedSubId}
+                onChange={handleSubCategoryChange}
+                disabled={!selectedParentId}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#00DE90',
+                    },
+                  },
+                }}
+              >
+                <MenuItem value="">선택하세요</MenuItem>
+                {subCategories.map((category) => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <TextField
+                select
+                fullWidth
+                size="small"
+                label="3차 카테고리"
+                value={selectedChildId}
+                onChange={handleChildCategoryChange}
+                disabled={!selectedSubId}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#00DE90',
+                    },
+                  },
+                }}
+              >
+                <MenuItem value="">선택하세요</MenuItem>
+                {childCategories.map((category) => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="상품명 검색"
+                value={searchKeyword}
+                onChange={handleSearchKeywordChange}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#00DE90',
+                    },
+                  },
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleSearch}
+                startIcon={<SearchIcon />}
+                sx={{
+                  backgroundColor: '#00DE90',
+                  '&:hover': { backgroundColor: '#00B574' },
+                }}
+              >
+                검색
+              </Button>
+            </Grid>
+          </Grid>
         </Paper>
 
         {/* 테이블 영역 */}
