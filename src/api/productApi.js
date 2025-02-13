@@ -61,7 +61,7 @@ export const remove = async (productId) => {
 //   "productIds": [1,2,3]
 // }
 export const changeIsNew = async (productIds) => {
-  const response = await axiosInstance.patch(`/product/best`, {
+  const response = await axiosInstance.patch(`/product/is-new`, {
     productIds: productIds,
   });
   return response.data;

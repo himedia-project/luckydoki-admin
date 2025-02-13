@@ -398,6 +398,12 @@ const ProductPage = () => {
                 </TableCell>
                 <TableCell
                   align="center"
+                  sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  이미지
+                </TableCell>
+                <TableCell
+                  align="center"
                   sx={{ minWidth: 250, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   상품명
@@ -438,12 +444,7 @@ const ProductPage = () => {
                 >
                   재고
                 </TableCell>
-                <TableCell
-                  align="center"
-                  sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
-                >
-                  이미지
-                </TableCell>
+
                 <TableCell
                   align="center"
                   sx={{ minWidth: 180, fontWeight: 'bold', color: '#1A1A1A' }}
@@ -498,6 +499,20 @@ const ProductPage = () => {
                     <TableCell align="center">{product.id}</TableCell>
                     <TableCell align="center">{product.categoryName}</TableCell>
                     <TableCell align="center">{product.shopName}</TableCell>
+                    <TableCell align="center">
+                      {product.uploadFileNames?.[0] && (
+                        <Box
+                          component="img"
+                          src={`${API_SERVER_HOST}/api/image/view/${product.uploadFileNames[0]}`}
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            objectFit: 'cover',
+                            borderRadius: 1,
+                          }}
+                        />
+                      )}
+                    </TableCell>
                     <TableCell align="center">{product.name}</TableCell>
                     <TableCell
                       align="center"
@@ -533,20 +548,7 @@ const ProductPage = () => {
                       {product.discountPrice?.toLocaleString()}원
                     </TableCell>
                     <TableCell align="center">{product.stockNumber}</TableCell>
-                    <TableCell align="center">
-                      {product.uploadFileNames?.[0] && (
-                        <Box
-                          component="img"
-                          src={`${API_SERVER_HOST}/api/image/view/${product.uploadFileNames[0]}`}
-                          sx={{
-                            width: 40,
-                            height: 40,
-                            objectFit: 'cover',
-                            borderRadius: 1,
-                          }}
-                        />
-                      )}
-                    </TableCell>
+
                     <TableCell align="center">{product.createdAt}</TableCell>
                     <TableCell align="center">{product.modifiedAt}</TableCell>
                     <TableCell align="center">
