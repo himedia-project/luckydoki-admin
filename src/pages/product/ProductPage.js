@@ -142,6 +142,23 @@ const ProductPage = () => {
     setPage(1);
   };
 
+  // 검색 초기화 핸들러 추가
+  const handleResetSearch = () => {
+    setSearchKeyword('');
+    setSelectedParentId('');
+    setSelectedSubId('');
+    setSelectedChildId('');
+    setSubCategories([]);
+    setChildCategories([]);
+    setFilters({
+      isNew: '',
+      best: '',
+      event: '',
+    });
+    setPage(1);
+    fetchProducts();
+  };
+
   // 엑셀 업로드 핸들러
   const handleFileUpload = async (file) => {
     setShowProgressModal(true);
@@ -418,7 +435,7 @@ const ProductPage = () => {
             {/* 검색어 및 카테고리 영역 */}
             <Grid item xs={12}>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={8}>
+                <Grid item xs={12} md={7}>
                   <TextField
                     fullWidth
                     size="small"
@@ -434,7 +451,7 @@ const ProductPage = () => {
                     }}
                   />
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3}>
                   <Button
                     fullWidth
                     variant="contained"
@@ -447,6 +464,24 @@ const ProductPage = () => {
                     }}
                   >
                     검색
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={2}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={handleResetSearch}
+                    sx={{
+                      height: '40px',
+                      borderColor: '#00DE90',
+                      color: '#00DE90',
+                      '&:hover': {
+                        borderColor: '#00B574',
+                        backgroundColor: 'rgba(0, 222, 144, 0.1)',
+                      },
+                    }}
+                  >
+                    검색 초기화
                   </Button>
                 </Grid>
               </Grid>
