@@ -24,6 +24,10 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import DownloadIcon from '@mui/icons-material/Download';
 import Checkbox from '@mui/material/Checkbox';
 import PageComponent from '../../components/common/PageComponent';
+import { registerProductExcel, downloadProductExcel } from '../../api/excelApi';
+import AlertModal from '../../components/common/AlertModal';
+import UploadModal from '../../components/common/UploadModal';
+import ProgressModal from '../../components/common/ProgressModal';
 
 const initState = {
   dtoList: [], // product 목록
@@ -48,6 +52,11 @@ const ProductPage = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [showProgressModal, setShowProgressModal] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
 
   const fetchProducts = async () => {
     const params = {
@@ -115,6 +124,87 @@ const ProductPage = () => {
     setPage(1);
   };
 
+  // 엑셀 업로드 핸들러
+  const handleFileUpload = async (file) => {
+    setShowProgressModal(true);
+    setUploadProgress(0);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      await registerProductExcel(formData, {
+        onUploadProgress: (progressEvent) => {
+          const progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+          setUploadProgress(progress);
+        },
+      });
+
+      setShowUploadModal(false);
+      await fetchProducts(); // 목록 새로고침
+      setAlertMessage('엑셀 업로드가 완료되었습니다.');
+      setShowAlert(true);
+    } catch (error) {
+      console.error('Excel upload failed:', error);
+      setAlertMessage('엑셀 업로드 중 오류가 발생했습니다.');
+      setShowAlert(true);
+    } finally {
+      setShowProgressModal(false);
+    }
+  };
+
+  // 엑셀 다운로드 핸들러
+  const handleDownload = async () => {
+    if (!selectedProducts.length) {
+      setAlertMessage('상품을 먼저 선택해주세요.');
+      setShowAlert(true);
+      return;
+    }
+
+    setShowProgressModal(true);
+    setUploadProgress(0);
+
+    try {
+      const response = await downloadProductExcel(selectedProducts, {
+        onDownloadProgress: (progressEvent) => {
+          const progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+          setUploadProgress(progress);
+        },
+      });
+      const contentDisposition = response.headers['content-disposition'];
+      let filename = 'products.xlsx';
+
+      if (contentDisposition) {
+        const matches = contentDisposition.match(/filename="(.+)"/);
+        if (matches && matches[1]) {
+          filename = decodeURIComponent(matches[1]);
+        }
+      }
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+
+      setAlertMessage('엑셀 다운로드가 완료되었습니다.');
+      setShowAlert(true);
+    } catch (error) {
+      console.error('Excel download failed:', error);
+      setAlertMessage('다운로드 중 오류가 발생했습니다.');
+      setShowAlert(true);
+    } finally {
+      setShowProgressModal(false);
+    }
+  };
+
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -135,6 +225,7 @@ const ProductPage = () => {
             <Button
               variant="contained"
               startIcon={<CloudUploadIcon />}
+              onClick={() => setShowUploadModal(true)}
               sx={{
                 backgroundColor: '#217346',
                 '&:hover': { backgroundColor: '#1a5c38' },
@@ -146,10 +237,10 @@ const ProductPage = () => {
             <Button
               variant="contained"
               startIcon={<DownloadIcon />}
+              onClick={handleDownload}
               sx={{
                 backgroundColor: '#217346',
                 '&:hover': { backgroundColor: '#1a5c38' },
-                mr: 1,
               }}
             >
               엑셀 다운로드
@@ -375,6 +466,22 @@ const ProductPage = () => {
           handlePageChange={handlePageChange}
         />
       </Container>
+
+      {/* 모달 컴포넌트들 추가 */}
+      <AlertModal
+        open={showAlert}
+        onClose={() => setShowAlert(false)}
+        title="알림"
+        message={alertMessage}
+        isSuccess={alertMessage.includes('완료')}
+        onConfirm={() => setShowAlert(false)}
+      />
+      <UploadModal
+        open={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        onUpload={handleFileUpload}
+      />
+      <ProgressModal open={showProgressModal} progress={uploadProgress} />
     </div>
   );
 };
