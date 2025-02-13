@@ -67,6 +67,12 @@ const ProductPage = () => {
   const [selectedSubId, setSelectedSubId] = useState('');
   const [selectedChildId, setSelectedChildId] = useState('');
 
+  const [filters, setFilters] = useState({
+    isNew: '',
+    best: '',
+    event: '',
+  });
+
   const fetchProducts = async () => {
     const params = {
       page: page,
@@ -74,6 +80,9 @@ const ProductPage = () => {
       sort: 'desc',
       searchKeyword: searchKeyword,
       categoryId: selectedChildId || null,
+      isNew: filters.isNew || null,
+      best: filters.best || null,
+      event: filters.event || null,
     };
 
     try {
@@ -323,6 +332,14 @@ const ProductPage = () => {
     fetchProducts();
   };
 
+  // 필터 변경 핸들러 추가
+  const handleFilterChange = (filterName) => (event) => {
+    setFilters((prev) => ({
+      ...prev,
+      [filterName]: event.target.value,
+    }));
+  };
+
   useEffect(() => {
     loadParentCategories();
     fetchProducts();
@@ -393,122 +410,198 @@ const ProductPage = () => {
           </Box>
         </Box>
 
-        {/* 검색 영역 */}
+        {/* 검색 영역 수정 */}
         <Paper
-          sx={{
-            p: 2,
-            mb: 3,
-            borderRadius: 2,
-            border: '1px solid #E5E5E5',
-          }}
+          sx={{ p: 3, mb: 3, borderRadius: 2, border: '1px solid #E5E5E5' }}
         >
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={2}>
-              <TextField
-                select
-                fullWidth
-                size="small"
-                label="1차 카테고리"
-                value={selectedParentId}
-                onChange={handleParentCategoryChange}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#00DE90',
-                    },
-                  },
-                }}
-              >
-                <MenuItem value="">선택하세요</MenuItem>
-                {parentCategories.map((category) => (
-                  <MenuItem
-                    key={category.categoryId}
-                    value={category.categoryId}
+          <Grid container spacing={3}>
+            {/* 검색어 및 카테고리 영역 */}
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={8}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    placeholder="상품명 검색"
+                    value={searchKeyword}
+                    onChange={handleSearchKeywordChange}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={handleSearch}
+                    startIcon={<SearchIcon />}
+                    sx={{
+                      height: '40px',
+                      backgroundColor: '#00DE90',
+                      '&:hover': { backgroundColor: '#00B574' },
+                    }}
                   >
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+                    검색
+                  </Button>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={2}>
-              <TextField
-                select
-                fullWidth
-                size="small"
-                label="2차 카테고리"
-                value={selectedSubId}
-                onChange={handleSubCategoryChange}
-                disabled={!selectedParentId}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#00DE90',
-                    },
-                  },
-                }}
-              >
-                <MenuItem value="">선택하세요</MenuItem>
-                {subCategories.map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+
+            {/* 카테고리 선택 영역 */}
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="1차 카테고리"
+                    value={selectedParentId}
+                    onChange={handleParentCategoryChange}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">전체</MenuItem>
+                    {parentCategories.map((category) => (
+                      <MenuItem
+                        key={category.categoryId}
+                        value={category.categoryId}
+                      >
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="2차 카테고리"
+                    value={selectedSubId}
+                    onChange={handleSubCategoryChange}
+                    disabled={!selectedParentId}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">전체</MenuItem>
+                    {subCategories.map((category) => (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="3차 카테고리"
+                    value={selectedChildId}
+                    onChange={handleChildCategoryChange}
+                    disabled={!selectedSubId}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">전체</MenuItem>
+                    {childCategories.map((category) => (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={2}>
-              <TextField
-                select
-                fullWidth
-                size="small"
-                label="3차 카테고리"
-                value={selectedChildId}
-                onChange={handleChildCategoryChange}
-                disabled={!selectedSubId}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#00DE90',
-                    },
-                  },
-                }}
-              >
-                <MenuItem value="">선택하세요</MenuItem>
-                {childCategories.map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.name}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                size="small"
-                placeholder="상품명 검색"
-                value={searchKeyword}
-                onChange={handleSearchKeywordChange}
-                sx={{
-                  '& .MuiOutlinedInput-root': {
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#00DE90',
-                    },
-                  },
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={handleSearch}
-                startIcon={<SearchIcon />}
-                sx={{
-                  backgroundColor: '#00DE90',
-                  '&:hover': { backgroundColor: '#00B574' },
-                }}
-              >
-                검색
-              </Button>
+
+            {/* 상태 필터 영역 */}
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="최신상품 여부"
+                    value={filters.isNew}
+                    onChange={handleFilterChange('isNew')}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">전체</MenuItem>
+                    <MenuItem value="Y">최신상품</MenuItem>
+                    <MenuItem value="N">일반상품</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="인기상품 여부"
+                    value={filters.best}
+                    onChange={handleFilterChange('best')}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">전체</MenuItem>
+                    <MenuItem value="Y">인기상품</MenuItem>
+                    <MenuItem value="N">일반상품</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="이벤트상품 여부"
+                    value={filters.event}
+                    onChange={handleFilterChange('event')}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">전체</MenuItem>
+                    <MenuItem value="Y">이벤트상품</MenuItem>
+                    <MenuItem value="N">일반상품</MenuItem>
+                  </TextField>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Paper>

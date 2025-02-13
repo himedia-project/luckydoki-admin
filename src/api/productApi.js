@@ -1,9 +1,9 @@
-import axios from 'axios';
 import axiosInstance from './axiosInstance';
 
 // /api/admin/product/list
 export const getList = async (pageParam) => {
-  const { page, size, sort, searchKeyword, categoryId } = pageParam;
+  const { page, size, sort, searchKeyword, categoryId, isNew, best, event } =
+    pageParam;
   const response = await axiosInstance.get(`/product/list`, {
     params: {
       page: page,
@@ -11,6 +11,9 @@ export const getList = async (pageParam) => {
       sort: sort,
       searchKeyword: searchKeyword,
       categoryId: categoryId,
+      isNew: isNew,
+      best: best,
+      event: event,
     },
   });
   return response.data;
