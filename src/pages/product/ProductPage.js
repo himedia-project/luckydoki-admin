@@ -74,11 +74,15 @@ const ProductPage = () => {
     event: '',
   });
 
+  // Add new state for sort and size
+  const [sortOrder, setSortOrder] = useState('desc');
+  const [pageSize, setPageSize] = useState(10);
+
   const fetchProducts = async () => {
     const params = {
       page: page,
-      size: 10,
-      sort: 'desc',
+      size: pageSize, // Use pageSize instead of hardcoded value
+      sort: sortOrder,
       searchKeyword: searchKeyword,
       categoryId: selectedChildId || null,
       isNew: filters.isNew || null,
@@ -152,7 +156,18 @@ const ProductPage = () => {
     setPage(1);
   };
 
-  // 검색 초기화 핸들러 추가
+  // Add handlers for sort and size changes
+  const handleSortChange = (event) => {
+    setSortOrder(event.target.value);
+    setPage(1); // Reset to first page when changing sort
+  };
+
+  const handleSizeChange = (event) => {
+    setPageSize(event.target.value);
+    setPage(1); // Reset to first page when changing size
+  };
+
+  // Update handleResetSearch to include new filters
   const handleResetSearch = () => {
     setSearchKeyword('');
     setSelectedParentId('');
@@ -165,6 +180,8 @@ const ProductPage = () => {
       best: '',
       event: '',
     });
+    setSortOrder('desc');
+    setPageSize(10);
     setPage(1);
     fetchProducts();
   };
@@ -353,18 +370,17 @@ const ProductPage = () => {
     setSelectedChildId(event.target.value);
   };
 
-  // 검색 버튼 클릭 핸들러
-  const handleSearch = () => {
-    setPage(1); // 페이지를 1로 리셋
-    fetchProducts();
-  };
-
   // 필터 변경 핸들러 추가
   const handleFilterChange = (filterName) => (event) => {
     setFilters((prev) => ({
       ...prev,
       [filterName]: event.target.value,
     }));
+  };
+
+  const handleSearch = () => {
+    setPage(1); // 검색 시 첫 페이지로 이동
+    fetchProducts();
   };
 
   useEffect(() => {
@@ -644,6 +660,54 @@ const ProductPage = () => {
                     <MenuItem value="">전체</MenuItem>
                     <MenuItem value="Y">이벤트상품</MenuItem>
                     <MenuItem value="N">일반상품</MenuItem>
+                  </TextField>
+                </Grid>
+              </Grid>
+            </Grid>
+
+            {/* Add this inside your search Paper component, after the existing filters */}
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="정렬 순서"
+                    value={sortOrder}
+                    onChange={handleSortChange}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="desc">최신순</MenuItem>
+                    <MenuItem value="asc">오래된순</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="페이지 크기"
+                    value={pageSize}
+                    onChange={handleSizeChange}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value={10}>10개씩 보기</MenuItem>
+                    <MenuItem value={30}>30개씩 보기</MenuItem>
+                    <MenuItem value={50}>50개씩 보기</MenuItem>
+                    <MenuItem value={100}>100개씩 보기</MenuItem>
                   </TextField>
                 </Grid>
               </Grid>
