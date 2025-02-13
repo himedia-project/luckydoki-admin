@@ -98,10 +98,10 @@ const Header = () => {
             </Typography>
             <Typography
               component={Link}
-              to="/seller"
+              to="/shop"
               onClick={(e) => {
                 e.preventDefault();
-                checkLoginAndNavigate('/seller');
+                checkLoginAndNavigate('/shop');
               }}
               sx={{
                 color: 'white',
@@ -109,7 +109,7 @@ const Header = () => {
                 fontWeight: 'bold',
               }}
             >
-              셀러요청
+              샵
             </Typography>
             <Typography
               component={Link}

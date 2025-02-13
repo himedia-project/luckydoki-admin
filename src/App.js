@@ -6,12 +6,14 @@ import NotFoundPage from './pages/NotFoundPage';
 import MainLayout from './layouts/MainLayout';
 import ProductPage from './pages/product/ProductPage';
 import MemberPage from './pages/member/MemberPage';
-import SellerPage from './pages/member/SellerPage';
+
 import OrderPage from './pages/order/OrderPage';
 import CouponPage from './pages/coupon/CouponPage';
 import EventPage from './pages/event/EventPage';
 import LoginPage from './pages/login/LoginPage';
 import IssuedCouponPage from './pages/coupon/IssuedCouponPage';
+import SellerPage from './pages/shop/SellerPage';
+import ShopPage from './pages/shop/ShopPage';
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/product" element={<ProductPage />} />
+        <Route path="/shop" element={<ShopPage />} />
         <Route path="/seller" element={<SellerPage />} />
         <Route path="/member" element={<MemberPage />} />
         <Route path="/order" element={<OrderPage />} />

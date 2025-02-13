@@ -28,7 +28,7 @@ const MemberPage = () => {
 
   // 역할 매핑 객체에 색상 정보 추가
   const roleMapping = {
-    USER: { label: '유저', color: '#4A90E2' }, // 파란색
+    USER: { label: '일반', color: '#4A90E2' }, // 파란색
     SELLER: { label: '셀러', color: '#00DE90' }, // 초록색
     ADMIN: { label: '관리자', color: '#1A1A1A' }, // 검정색
   };
@@ -132,7 +132,7 @@ const MemberPage = () => {
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  샵이름
+                  닉네임
                 </TableCell>
                 <TableCell
                   align="center"

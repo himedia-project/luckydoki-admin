@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -20,8 +21,10 @@ import AlertModal from '../../components/common/AlertModal';
 import * as sellerApi from '../../api/sellerApi';
 import PageComponent from '../../components/common/PageComponent';
 import { API_SERVER_HOST } from '../../config/apiConfig';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const SellerPage = () => {
+  const navigate = useNavigate();
   const [sellers, setSellers] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [selectedSeller, setSelectedSeller] = useState(null);
@@ -92,12 +95,31 @@ const SellerPage = () => {
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-          <Typography
-            variant="h5"
-            sx={{ color: '#1A1A1A', fontWeight: 'bold' }}
-          >
-            셀러 요청 관리
-          </Typography>
+          <Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 1 }}>
+              <Button
+                startIcon={<ArrowBackIcon />}
+                onClick={() => navigate('/shop')}
+                sx={{
+                  color: '#666',
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                  },
+                }}
+              >
+                샵 목록
+              </Button>
+              <Typography
+                variant="h5"
+                sx={{ color: '#1A1A1A', fontWeight: 'bold' }}
+              >
+                셀러 요청 관리
+              </Typography>
+            </Box>
+            <Typography variant="subtitle1" sx={{ color: '#666', mt: 1 }}>
+              ✳️ 셀러 요청을 관리하는 페이지입니다.
+            </Typography>
+          </Box>
           <Button
             variant="contained"
             onClick={handleApprove}
@@ -106,6 +128,8 @@ const SellerPage = () => {
               bgcolor: '#00DE90',
               '&:hover': { bgcolor: '#00C580' },
               '&.Mui-disabled': { bgcolor: '#B3F4DC' },
+              height: '36px',
+              px: 3,
             }}
           >
             승인
