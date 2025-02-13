@@ -33,7 +33,7 @@ export const create = async (coupon) => {
 // }
 export const issueCoupon = async (couponId, emails) => {
   const response = await axiosInstance.post(`/coupon/${couponId}/issue`, {
-    emails,
+    emails: emails,
   });
   return response.data;
 };

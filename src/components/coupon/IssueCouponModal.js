@@ -84,11 +84,7 @@ const IssueCouponModal = ({ open, onClose, coupon, onSuccess }) => {
 
   const handleSubmit = async () => {
     try {
-      const requestData = {
-        emails: selectedEmails,
-      };
-
-      await issueCoupon(coupon.id, requestData);
+      await issueCoupon(coupon.id, selectedEmails);
       onSuccess();
       onClose();
       setSelectedEmails([]);
