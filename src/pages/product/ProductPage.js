@@ -87,9 +87,7 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
-    if (page > 1) {
-      fetchProducts();
-    }
+    fetchProducts();
   }, [page]);
 
   const handlePageChange = (event, newPage) => {
@@ -327,6 +325,7 @@ const ProductPage = () => {
 
   useEffect(() => {
     loadParentCategories();
+    fetchProducts();
   }, []);
 
   return (
@@ -560,7 +559,7 @@ const ProductPage = () => {
                   align="center"
                   sx={{ minWidth: 150, fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  카테고리
+                  3차 카테고리
                 </TableCell>
                 <TableCell
                   align="center"
