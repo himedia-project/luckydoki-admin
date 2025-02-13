@@ -30,6 +30,7 @@ import { registerProductExcel, downloadProductExcel } from '../../api/excelApi';
 import AlertModal from '../../components/common/AlertModal';
 import UploadModal from '../../components/common/UploadModal';
 import ProgressModal from '../../components/common/ProgressModal';
+import ConfirmModal from '../../components/common/ConfirmModal';
 
 const initState = {
   dtoList: [], // product 목록
@@ -49,7 +50,7 @@ const ProductPage = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0); // 총 페이지 수
 
-  const [selectedProduct, setSelectedProduct] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -112,10 +113,19 @@ const ProductPage = () => {
   const handleDeleteConfirm = async () => {
     try {
       await remove(selectedProduct.id);
-      fetchProducts();
-      setIsDeleteModalOpen(false);
+      setAlertMessage('상품이 성공적으로 삭제되었습니다.');
+      setShowAlert(true);
+      fetchProducts(); // 목록 새로고침
     } catch (error) {
       console.error('상품 삭제 실패:', error);
+      // API에서 반환하는 에러 메시지를 직접 표시
+      const errorMessage =
+        error.response?.data?.errMsg || '상품 삭제 중 오류가 발생했습니다.';
+      setAlertMessage(errorMessage);
+      setShowAlert(true);
+    } finally {
+      setIsDeleteModalOpen(false);
+      setSelectedProduct(null);
     }
   };
 
@@ -904,6 +914,15 @@ const ProductPage = () => {
         onUpload={handleFileUpload}
       />
       <ProgressModal open={showProgressModal} progress={uploadProgress} />
+
+      {/* AlertModal을 ConfirmModal로 변경 */}
+      <ConfirmModal
+        open={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title="상품 삭제"
+        message={`'${selectedProduct?.name}' 상품을 삭제하시겠습니까?`}
+      />
     </div>
   );
 };
