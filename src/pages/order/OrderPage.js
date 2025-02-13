@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Box,
@@ -15,22 +15,61 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
+import { getList } from '../../api/orderApi';
+import PageComponent from '../../components/common/PageComponent';
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const fetchOrders = async () => {
+    const params = {
+      page: page,
+      size: 10,
+      sort: 'desc',
+      searchKeyword: searchKeyword,
+    };
+
+    try {
+      const response = await getList(params);
+      setOrders(response.dtoList || []);
+      setTotalPages(Math.ceil(response.totalCount / params.size));
+    } catch (error) {
+      console.error('주문 목록 로딩 실패:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, [page, searchKeyword]);
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleSearchKeywordChange = (e) => {
+    setSearchKeyword(e.target.value);
+    setPage(1);
+  };
 
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
         {/* 상단 헤더 영역 */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-          <Typography
-            variant="h5"
-            sx={{ color: '#1A1A1A', fontWeight: 'bold' }}
-          >
-            주문 관리
-          </Typography>
+          <Box>
+            <Typography
+              variant="h5"
+              sx={{ color: '#1A1A1A', fontWeight: 'bold' }}
+            >
+              주문 관리
+            </Typography>
+            <Typography variant="subtitle1" sx={{ color: '#666', mt: 1 }}>
+              ✳️ 고객의 주문 내역을 관리하는 페이지입니다.
+            </Typography>
+          </Box>
         </Box>
 
         {/* 검색 영역 */}
@@ -42,10 +81,10 @@ const OrderPage = () => {
             size="small"
             placeholder="주문코드 검색"
             value={searchKeyword}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+            onChange={handleSearchKeywordChange}
             InputProps={{
               endAdornment: (
-                <IconButton>
+                <IconButton onClick={fetchOrders}>
                   <SearchIcon sx={{ color: '#00DE90' }} />
                 </IconButton>
               ),
@@ -69,23 +108,35 @@ const OrderPage = () => {
           <Table>
             <TableHead>
               <TableRow sx={{ bgcolor: '#F8FFF8' }}>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   주문코드
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   주문자
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   주문날짜
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
-                  주문총금액
-                </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   주문상태
                 </TableCell>
-                <TableCell sx={{ fontWeight: 'bold', color: '#1A1A1A' }}>
-                  결제여부
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  주문총금액
                 </TableCell>
                 <TableCell
                   align="center"
@@ -98,16 +149,16 @@ const OrderPage = () => {
             <TableBody>
               {orders.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} align="center" sx={{ py: 3 }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 3 }}>
                     <Typography variant="body1" color="text.secondary">
-                      등록된 목록이 없습니다.
+                      등록된 주문이 없습니다.
                     </Typography>
                   </TableCell>
                 </TableRow>
               ) : (
                 orders.map((order) => (
                   <TableRow
-                    key={order.id}
+                    key={order.orderId}
                     hover
                     sx={{
                       '&:hover': {
@@ -115,14 +166,37 @@ const OrderPage = () => {
                       },
                     }}
                   >
-                    <TableCell>{order.orderCode}</TableCell>
-                    <TableCell>{order.customer}</TableCell>
-                    <TableCell>{order.orderDate}</TableCell>
-                    <TableCell>
-                      {order.totalAmount.toLocaleString()}원
+                    <TableCell align="center">{order.orderCode}</TableCell>
+                    <TableCell align="center">{order.email}</TableCell>
+                    <TableCell align="center">{order.orderDate}</TableCell>
+                    <TableCell align="center">
+                      <Box
+                        component="span"
+                        sx={{
+                          px: 2,
+                          py: 0.5,
+                          borderRadius: 1,
+                          fontSize: '0.875rem',
+                          fontWeight: 'medium',
+                          ...(order.orderStatus === 'ORDER'
+                            ? {
+                                color: '#00875A',
+                                bgcolor: '#E6F4ED',
+                              }
+                            : {
+                                color: '#B42318',
+                                bgcolor: '#FEE4E2',
+                              }),
+                        }}
+                      >
+                        {order.orderStatus === 'ORDER'
+                          ? '주문완료'
+                          : '주문취소'}
+                      </Box>
                     </TableCell>
-                    <TableCell>{order.status}</TableCell>
-                    <TableCell>{order.paymentStatus}</TableCell>
+                    <TableCell align="center">
+                      {order.totalPrice?.toLocaleString()}원
+                    </TableCell>
                     <TableCell align="center">
                       <IconButton
                         size="small"
@@ -142,6 +216,12 @@ const OrderPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
+        <PageComponent
+          page={page}
+          totalPages={totalPages}
+          handlePageChange={handlePageChange}
+        />
       </Container>
     </div>
   );
