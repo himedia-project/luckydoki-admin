@@ -25,6 +25,7 @@ import PageComponent from '../../components/common/PageComponent';
 import CreateEventModal from '../../components/event/CreateEventModal';
 import AlertModal from '../../components/common/AlertModal';
 import ConfirmModal from '../../components/common/ConfirmModal';
+import { imageLoader } from '../../utils/imageLoader';
 
 const EventPage = () => {
   const [events, setEvents] = useState([]);
@@ -265,7 +266,7 @@ const EventPage = () => {
                       {event.image && (
                         <Box
                           component="img"
-                          src={`${API_SERVER_HOST}/api/image/view/${event.image}`}
+                          src={imageLoader(event.image)}
                           sx={{
                             width: 40,
                             height: 40,

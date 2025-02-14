@@ -17,8 +17,8 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import * as shopApi from '../../api/shopApi';
 import PageComponent from '../../components/common/PageComponent';
-import { API_SERVER_HOST } from '../../config/apiConfig';
 import { useNavigate } from 'react-router-dom';
+import { imageLoader } from '../../utils/imageLoader';
 
 const ShopPage = () => {
   const [shops, setShops] = useState([]);
@@ -173,7 +173,7 @@ const ShopPage = () => {
                     <TableCell align="center">{shop.nickName}</TableCell>
                     <TableCell align="center">
                       <img
-                        src={`${API_SERVER_HOST}/api/image/view/${shop.image}`}
+                        src={imageLoader(shop.image)}
                         alt="매장 이미지"
                         style={{ width: 50, height: 50, objectFit: 'cover' }}
                       />

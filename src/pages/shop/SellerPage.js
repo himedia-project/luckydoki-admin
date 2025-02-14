@@ -20,8 +20,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import AlertModal from '../../components/common/AlertModal';
 import * as sellerApi from '../../api/sellerApi';
 import PageComponent from '../../components/common/PageComponent';
-import { API_SERVER_HOST } from '../../config/apiConfig';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ImageLoader from '../../components/image/ImageLoader';
 
 const SellerPage = () => {
   const navigate = useNavigate();
@@ -246,10 +246,15 @@ const SellerPage = () => {
                     <TableCell align="center">{seller.email}</TableCell>
                     <TableCell align="center">{seller.nickName}</TableCell>
                     <TableCell align="center">
-                      <img
-                        src={`${API_SERVER_HOST}/api/image/view/${seller.shopImage}`}
+                      <ImageLoader
+                        imagePath={seller.shopImage}
                         alt="매장 이미지"
-                        style={{ width: 50, height: 50, objectFit: 'cover' }}
+                        sx={{
+                          width: '50px',
+                          height: '50px',
+                          objectFit: 'cover',
+                          borderRadius: '4px',
+                        }}
                       />
                     </TableCell>
                     <TableCell align="center">{seller.introduction}</TableCell>

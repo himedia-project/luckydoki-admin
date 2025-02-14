@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Box, Typography, Grid, Paper, IconButton } from '@mui/material';
-import { API_SERVER_HOST } from '../../config/apiConfig';
 import CloseIcon from '@mui/icons-material/Close';
+import { imageLoader } from '../../utils/imageLoader';
 
 const OrderDetailModal = ({ open, onClose, order }) => {
   if (!order) return null;
@@ -106,7 +106,7 @@ const OrderDetailModal = ({ open, onClose, order }) => {
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={2}>
                 <img
-                  src={`${API_SERVER_HOST}/api/image/view/${item.image}`}
+                  src={imageLoader(item.image)}
                   alt={item.productName}
                   style={{
                     width: '100%',
