@@ -13,3 +13,8 @@ export const getList = async (pageParam) => {
   });
   return response.data;
 };
+
+export const getDetail = async (orderId) => {
+  const response = await axiosInstance.get(`/order/${orderId}/detail`);
+  return response.data;
+};

@@ -15,14 +15,17 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
-import { getList } from '../../api/orderApi';
+import { getList, getDetail } from '../../api/orderApi';
 import PageComponent from '../../components/common/PageComponent';
+import OrderDetailModal from '../../components/order/OrderDetailModal';
 
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
   const fetchOrders = async () => {
     const params = {
@@ -52,6 +55,21 @@ const OrderPage = () => {
   const handleSearchKeywordChange = (e) => {
     setSearchKeyword(e.target.value);
     setPage(1);
+  };
+
+  const handleOpenModal = async (orderId) => {
+    try {
+      const response = await getDetail(orderId);
+      setSelectedOrder(response);
+      setOpenModal(true);
+    } catch (error) {
+      console.error('주문 상세 정보 로딩 실패:', error);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedOrder(null);
   };
 
   return (
@@ -112,6 +130,12 @@ const OrderPage = () => {
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
+                  ID
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   주문코드
                 </TableCell>
                 <TableCell
@@ -166,6 +190,7 @@ const OrderPage = () => {
                       },
                     }}
                   >
+                    <TableCell align="center">{order.orderId}</TableCell>
                     <TableCell align="center">{order.orderCode}</TableCell>
                     <TableCell align="center">{order.email}</TableCell>
                     <TableCell align="center">{order.orderDate}</TableCell>
@@ -206,6 +231,7 @@ const OrderPage = () => {
                             bgcolor: 'rgba(0, 222, 144, 0.1)',
                           },
                         }}
+                        onClick={() => handleOpenModal(order.orderId)}
                       >
                         <EditIcon />
                       </IconButton>
@@ -221,6 +247,13 @@ const OrderPage = () => {
           page={page}
           totalPages={totalPages}
           handlePageChange={handlePageChange}
+        />
+
+        {/* Order Detail Modal */}
+        <OrderDetailModal
+          open={openModal}
+          onClose={handleCloseModal}
+          order={selectedOrder}
         />
       </Container>
     </div>
