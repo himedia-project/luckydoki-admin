@@ -25,7 +25,7 @@ import PageComponent from '../../components/common/PageComponent';
 import CreateEventModal from '../../components/event/CreateEventModal';
 import AlertModal from '../../components/common/AlertModal';
 import ConfirmModal from '../../components/common/ConfirmModal';
-import { imageLoader } from '../../utils/imageLoader';
+import ImageLoader from '../../components/image/ImageLoader';
 
 const EventPage = () => {
   const [events, setEvents] = useState([]);
@@ -264,14 +264,14 @@ const EventPage = () => {
                     <TableCell align="center">{event.content}</TableCell>
                     <TableCell align="center">
                       {event.image && (
-                        <Box
-                          component="img"
-                          src={imageLoader(event.image)}
+                        <ImageLoader
+                          imagePath={event.image}
+                          alt={event.title}
                           sx={{
                             width: 40,
                             height: 40,
                             objectFit: 'cover',
-                            borderRadius: 1,
+                            borderRadius: '4px',
                           }}
                         />
                       )}

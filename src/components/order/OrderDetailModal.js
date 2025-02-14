@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Box, Typography, Grid, Paper, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { imageLoader } from '../../utils/imageLoader';
+import ImageLoader from '../image/ImageLoader';
 
 const OrderDetailModal = ({ open, onClose, order }) => {
   if (!order) return null;
@@ -105,15 +105,18 @@ const OrderDetailModal = ({ open, onClose, order }) => {
           >
             <Grid container spacing={2} alignItems="center">
               <Grid item xs={2}>
-                <img
-                  src={imageLoader(item.image)}
-                  alt={item.productName}
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    borderRadius: 8,
-                  }}
-                />
+                {item.image && (
+                  <ImageLoader
+                    imagePath={item.image}
+                    alt={item.productName}
+                    sx={{
+                      width: '100%',
+                      height: 'auto',
+                      borderRadius: 8,
+                      objectFit: 'cover',
+                    }}
+                  />
+                )}
               </Grid>
               <Grid item xs={10}>
                 <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
