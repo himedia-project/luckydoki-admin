@@ -79,7 +79,7 @@ const OrderPage = () => {
           <TextField
             fullWidth
             size="small"
-            placeholder="주문코드 검색"
+            placeholder="주문코드 또는 주문자 검색"
             value={searchKeyword}
             onChange={handleSearchKeywordChange}
             InputProps={{

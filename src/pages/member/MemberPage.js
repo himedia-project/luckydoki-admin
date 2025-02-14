@@ -33,6 +33,22 @@ const MemberPage = () => {
     ADMIN: { label: '관리자', color: '#1A1A1A' }, // 검정색
   };
 
+  // 상태 매핑 객체 추가
+  const statusMapping = {
+    Y: { label: '활성화', color: '#00DE90', bgColor: 'rgba(0, 222, 144, 0.1)' },
+    N: { label: '탈퇴', color: '#FF6B6B', bgColor: 'rgba(255, 107, 107, 0.1)' },
+  };
+
+  // 수신동의 매핑 객체 추가
+  const pushActiveMapping = {
+    Y: { label: '동의', color: '#00DE90', bgColor: 'rgba(0, 222, 144, 0.1)' },
+    N: {
+      label: '미동의',
+      color: '#FF6B6B',
+      bgColor: 'rgba(255, 107, 107, 0.1)',
+    },
+  };
+
   const fetchMembers = async () => {
     const params = {
       page: page,
@@ -144,6 +160,18 @@ const MemberPage = () => {
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
+                  상태
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  수신동의
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
                   등록일
                 </TableCell>
                 <TableCell
@@ -195,6 +223,38 @@ const MemberPage = () => {
                     </TableCell>
                     <TableCell align="center">{member.nickName}</TableCell>
                     <TableCell align="center">{member.phone}</TableCell>
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          display: 'inline-block',
+                          px: 1.5,
+                          py: 0.5,
+                          borderRadius: 1,
+                          backgroundColor:
+                            statusMapping[member.active]?.bgColor,
+                          color: statusMapping[member.active]?.color,
+                          fontSize: '0.875rem',
+                        }}
+                      >
+                        {statusMapping[member.active]?.label}
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box
+                        sx={{
+                          display: 'inline-block',
+                          px: 1.5,
+                          py: 0.5,
+                          borderRadius: 1,
+                          backgroundColor:
+                            pushActiveMapping[member.pushActive]?.bgColor,
+                          color: pushActiveMapping[member.pushActive]?.color,
+                          fontSize: '0.875rem',
+                        }}
+                      >
+                        {pushActiveMapping[member.pushActive]?.label}
+                      </Box>
+                    </TableCell>
                     <TableCell align="center">{member.createdAt}</TableCell>
                     <TableCell align="center">{member.modifiedAt}</TableCell>
                     <TableCell align="center">
