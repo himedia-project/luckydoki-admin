@@ -31,6 +31,7 @@ import AlertModal from '../../components/common/AlertModal';
 import UploadModal from '../../components/common/UploadModal';
 import ProgressModal from '../../components/common/ProgressModal';
 import ConfirmModal from '../../components/common/ConfirmModal';
+import ImageLoader from '../../components/image/ImageLoader';
 
 const initState = {
   dtoList: [], // product 목록
@@ -954,14 +955,14 @@ const ProductPage = () => {
                     </TableCell>
                     <TableCell align="center" className="sticky sticky-4">
                       {product.uploadFileNames?.[0] && (
-                        <Box
-                          component="img"
-                          src={`${API_SERVER_HOST}/api/image/view/${product.uploadFileNames[0]}`}
+                        <ImageLoader
+                          imagePath={product.uploadFileNames[0]}
+                          alt={product.name}
                           sx={{
-                            width: 40,
-                            height: 40,
+                            width: '60px',
+                            height: '60px',
                             objectFit: 'cover',
-                            borderRadius: 1,
+                            borderRadius: '4px',
                           }}
                         />
                       )}
