@@ -169,7 +169,7 @@ const Header = () => {
                 fontWeight: 'bold',
               }}
             >
-              기획전
+              이벤트
             </Typography>
             {email ? (
               <Button

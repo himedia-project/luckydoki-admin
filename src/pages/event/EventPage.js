@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getList, deleteEvent } from '../../api/eventApi';
-import { API_SERVER_HOST } from '../../config/apiConfig';
 import {
   Container,
   Grid,
