@@ -18,6 +18,7 @@ const CreateCouponModal = ({ open, onClose, onSuccess }) => {
     discountPrice: '',
     startDate: '',
     endDate: '',
+    minimumUsageAmount: '',
   });
   const [alertOpen, setAlertOpen] = useState(false);
 
@@ -40,6 +41,7 @@ const CreateCouponModal = ({ open, onClose, onSuccess }) => {
         discountPrice: '',
         startDate: '',
         endDate: '',
+        minimumUsageAmount: '',
       });
     } catch (error) {
       console.error('쿠폰 등록 실패:', error);
@@ -77,6 +79,18 @@ const CreateCouponModal = ({ open, onClose, onSuccess }) => {
               label="할인 금액"
               type="number"
               value={couponData.discountPrice}
+              onChange={handleChange}
+              fullWidth
+              required
+              InputProps={{
+                inputProps: { min: 0 },
+              }}
+            />
+            <TextField
+              name="minimumUsageAmount"
+              label="최소주문금액"
+              type="number"
+              value={couponData.minimumUsageAmount}
               onChange={handleChange}
               fullWidth
               required
