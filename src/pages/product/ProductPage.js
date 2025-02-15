@@ -32,6 +32,7 @@ import PageComponent from '../../components/common/PageComponent';
 import ProgressModal from '../../components/common/ProgressModal';
 import UploadModal from '../../components/common/UploadModal';
 import ImageLoader from '../../components/image/ImageLoader';
+import useDragScroll from '../../hooks/useDragScroll';
 
 const initState = {
   dtoList: [], // product 목록
@@ -86,10 +87,9 @@ const ProductPage = () => {
   const [totalCount, setTotalCount] = useState(0); // 추가: 총 상품 수를 저장할 state
 
   // 드래그 스크롤 관련 상태와 핸들러 추가
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
   const tableContainerRef = useRef(null);
+  const { handleMouseDown, dragScrollStyles, isDragging } =
+    useDragScroll(tableContainerRef);
 
   const fetchProducts = async () => {
     const params = {
@@ -441,45 +441,6 @@ const ProductPage = () => {
       console.error('샵 목록 로드 실패:', error);
     }
   };
-
-  // TableContainer 스타일 수정
-  // 드래그 스크롤 변경을 위한한
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    const tableContainer = tableContainerRef.current;
-    if (!tableContainer) return;
-
-    setStartX(e.pageX - tableContainer.offsetLeft);
-    setScrollLeft(tableContainer.scrollLeft);
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-
-    const tableContainer = tableContainerRef.current;
-    if (!tableContainer) return;
-
-    e.preventDefault();
-    const x = e.pageX - tableContainer.offsetLeft;
-    const walk = (x - startX) * 2; // 스크롤 속도 조절
-    tableContainer.scrollLeft = scrollLeft - walk;
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mouseleave', handleMouseUp);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('mouseleave', handleMouseUp);
-    };
-  }, [isDragging, startX, scrollLeft]);
 
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
@@ -861,16 +822,7 @@ const ProductPage = () => {
             borderRadius: 2,
             border: '1px solid #E5E5E5',
             overflowX: 'auto',
-            // ✳️ 드래그 스크롤 변경을 위한
-            cursor: 'grab',
-            '&:active': {
-              cursor: 'grabbing',
-            },
-            '&::-webkit-scrollbar': {
-              display: 'none',
-            },
-            '-ms-overflow-style': 'none',
-            'scrollbar-width': 'none',
+            ...dragScrollStyles,
             '& th.sticky, & td.sticky': {
               position: 'sticky',
               backgroundColor: 'white',
