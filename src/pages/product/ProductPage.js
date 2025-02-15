@@ -1,36 +1,36 @@
-import React, { useEffect, useState } from 'react';
-import { getList, remove, changeIsNew, changeBest } from '../../api/productApi';
-import { getParentList, getChildList } from '../../api/categoryApi';
-import { API_SERVER_HOST } from '../../config/apiConfig';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DownloadIcon from '@mui/icons-material/Download';
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
 import {
+  Box,
+  Button,
   Container,
   Grid,
-  Typography,
-  TextField,
-  Button,
-  Box,
+  IconButton,
+  MenuItem,
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
-  IconButton,
-  MenuItem,
+  TextField,
+  Typography,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SearchIcon from '@mui/icons-material/Search';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import DownloadIcon from '@mui/icons-material/Download';
 import Checkbox from '@mui/material/Checkbox';
-import PageComponent from '../../components/common/PageComponent';
-import { registerProductExcel, downloadProductExcel } from '../../api/excelApi';
+import React, { useEffect, useState } from 'react';
+import { getChildList, getParentList } from '../../api/categoryApi';
+import { downloadProductExcel, registerProductExcel } from '../../api/excelApi';
+import { changeBest, changeIsNew, getList, remove } from '../../api/productApi';
+import { getShopOptionList } from '../../api/shopApi';
 import AlertModal from '../../components/common/AlertModal';
-import UploadModal from '../../components/common/UploadModal';
-import ProgressModal from '../../components/common/ProgressModal';
 import ConfirmModal from '../../components/common/ConfirmModal';
+import PageComponent from '../../components/common/PageComponent';
+import ProgressModal from '../../components/common/ProgressModal';
+import UploadModal from '../../components/common/UploadModal';
 import ImageLoader from '../../components/image/ImageLoader';
 
 const initState = {
@@ -79,16 +79,21 @@ const ProductPage = () => {
   const [sortOrder, setSortOrder] = useState('desc');
   const [pageSize, setPageSize] = useState(10);
 
+  // Add new state for shops and selected shop
+  const [shops, setShops] = useState([]);
+  const [selectedShopId, setSelectedShopId] = useState('');
+
   const fetchProducts = async () => {
     const params = {
       page: page,
-      size: pageSize, // Use pageSize instead of hardcoded value
+      size: pageSize,
       sort: sortOrder,
       searchKeyword: searchKeyword,
       categoryId: selectedChildId || null,
       isNew: filters.isNew || null,
       best: filters.best || null,
       event: filters.event || null,
+      shopId: selectedShopId || null,
     };
 
     try {
@@ -102,8 +107,10 @@ const ProductPage = () => {
   };
 
   useEffect(() => {
+    loadParentCategories();
+    loadShops();
     fetchProducts();
-  }, [page]);
+  }, []);
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -174,6 +181,7 @@ const ProductPage = () => {
     setSelectedParentId('');
     setSelectedSubId('');
     setSelectedChildId('');
+    setSelectedShopId('');
     setSubCategories([]);
     setChildCategories([]);
     setFilters({
@@ -405,10 +413,15 @@ const ProductPage = () => {
     fetchProducts();
   };
 
-  useEffect(() => {
-    loadParentCategories();
-    fetchProducts();
-  }, []);
+  // Add loadShops function
+  const loadShops = async () => {
+    try {
+      const data = await getShopOptionList();
+      setShops(data);
+    } catch (error) {
+      console.error('샵 목록 로드 실패:', error);
+    }
+  };
 
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
@@ -480,6 +493,36 @@ const ProductPage = () => {
           sx={{ p: 3, mb: 3, borderRadius: 2, border: '1px solid #E5E5E5' }}
         >
           <Grid container spacing={3}>
+            {/* Add shop selection before the search keyword */}
+            <Grid item xs={12}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={7}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="샵 선택"
+                    value={selectedShopId}
+                    onChange={(e) => setSelectedShopId(e.target.value)}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">전체</MenuItem>
+                    {shops.map((shop) => (
+                      <MenuItem key={shop.id} value={shop.id}>
+                        {shop.nickName}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+              </Grid>
+            </Grid>
+
             {/* 검색어 및 카테고리 영역 */}
             <Grid item xs={12}>
               <Grid container spacing={2}>

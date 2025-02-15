@@ -12,3 +12,10 @@ export const getShopList = async (params) => {
   });
   return response.data;
 };
+
+// 샵 옵션 선택 리스트 조회
+// http://localhost:8080/api/admin/shop/option/list
+export const getShopOptionList = async () => {
+  const response = await axiosInstance.get(`${host}/option/list`);
+  return response.data;
+};
