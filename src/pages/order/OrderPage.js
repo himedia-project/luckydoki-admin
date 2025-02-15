@@ -148,7 +148,7 @@ const OrderPage = () => {
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  주문날짜
+                  주문일시
                 </TableCell>
                 <TableCell
                   align="center"
@@ -161,6 +161,18 @@ const OrderPage = () => {
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
                   주문총금액
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  결제상태
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  결제일시
                 </TableCell>
                 <TableCell
                   align="center"
@@ -221,6 +233,32 @@ const OrderPage = () => {
                     </TableCell>
                     <TableCell align="center">
                       {order.totalPrice?.toLocaleString()}원
+                    </TableCell>
+                    <TableCell align="center">
+                      <Box
+                        component="span"
+                        sx={{
+                          px: 2,
+                          py: 0.5,
+                          borderRadius: 1,
+                          fontSize: '0.875rem',
+                          fontWeight: 'medium',
+                          ...(order.paymentStatus === 'COMPLETED'
+                            ? {
+                                color: '#00875A',
+                                bgcolor: '#E6F4ED',
+                              }
+                            : {
+                                color: '#B42318',
+                                bgcolor: '#FEE4E2',
+                              }),
+                        }}
+                      >
+                        {order.paymentStatus ? order.paymentStatus : '-'}
+                      </Box>
+                    </TableCell>
+                    <TableCell align="center">
+                      {order.paymentDate || '-'}
                     </TableCell>
                     <TableCell align="center">
                       <IconButton
