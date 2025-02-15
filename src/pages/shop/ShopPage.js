@@ -81,7 +81,7 @@ const ShopPage = () => {
                 },
               }}
             >
-              셀러 요청
+              셀러 요청 목록
             </Button>
           </Box>
         </Box>

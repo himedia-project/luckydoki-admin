@@ -197,7 +197,7 @@ const SellerPage = () => {
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                   align="center"
                 >
-                  설명
+                  소개글
                 </TableCell>
                 <TableCell
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
