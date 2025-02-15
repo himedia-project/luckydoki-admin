@@ -113,7 +113,17 @@ const ProductPage = () => {
     loadParentCategories();
     loadShops();
     fetchProducts();
-  }, []);
+  }, [
+    // ☑️ 페이지네이션을 위해서 의존성 배열에 넣음
+    page,
+    pageSize,
+    // ❗검색버튼을 클릭해야 진행! 의존성 배열에 넣으면 안됨
+    // sortOrder,
+    // searchKeyword,
+    // selectedChildId,
+    // filters,
+    // selectedShopId,
+  ]);
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
