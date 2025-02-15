@@ -83,6 +83,8 @@ const ProductPage = () => {
   const [shops, setShops] = useState([]);
   const [selectedShopId, setSelectedShopId] = useState('');
 
+  const [totalCount, setTotalCount] = useState(0); // 추가: 총 상품 수를 저장할 state
+
   const fetchProducts = async () => {
     const params = {
       page: page,
@@ -99,6 +101,7 @@ const ProductPage = () => {
     try {
       const response = await getList(params);
       setProducts(response.dtoList || []);
+      setTotalCount(response.totalCount); // 추가: 총 상품 수 저장
       const totalPagesCount = Math.ceil(response.totalCount / params.size);
       setTotalPages(totalPagesCount);
     } catch (error) {
@@ -178,10 +181,10 @@ const ProductPage = () => {
   // Update handleResetSearch to include new filters
   const handleResetSearch = () => {
     setSearchKeyword('');
+    setSelectedShopId('');
     setSelectedParentId('');
     setSelectedSubId('');
     setSelectedChildId('');
-    setSelectedShopId('');
     setSubCategories([]);
     setChildCategories([]);
     setFilters({
@@ -486,6 +489,21 @@ const ProductPage = () => {
               엑셀 다운로드
             </Button>
           </Box>
+        </Box>
+
+        {/* 검색 영역 Paper 컴포넌트와 테이블 컨테이너 사이에 추가 */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            mb: 2,
+            mt: -1,
+          }}
+        >
+          <Typography variant="h9" sx={{ color: '#666' }}>
+            검색된 총 상품 수: <strong>{totalCount}</strong>개
+          </Typography>
         </Box>
 
         {/* 검색 영역 수정 */}
