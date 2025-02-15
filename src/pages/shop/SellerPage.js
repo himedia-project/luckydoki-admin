@@ -209,6 +209,12 @@ const SellerPage = () => {
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                   align="center"
                 >
+                  승인일시
+                </TableCell>
+                <TableCell
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  align="center"
+                >
                   승인상태
                 </TableCell>
               </TableRow>
@@ -259,6 +265,9 @@ const SellerPage = () => {
                     </TableCell>
                     <TableCell align="center">{seller.introduction}</TableCell>
                     <TableCell align="center">{seller.requestAt}</TableCell>
+                    <TableCell align="center">
+                      {seller.approvedAt || '-'}
+                    </TableCell>
                     <TableCell align="center">
                       <Box
                         sx={{
