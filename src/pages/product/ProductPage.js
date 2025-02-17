@@ -1010,7 +1010,23 @@ const ProductPage = () => {
                         }}
                       />
                     </TableCell>
-                    <TableCell align="center" className="sticky sticky-1">
+                    <TableCell
+                      align="center"
+                      className="sticky sticky-1"
+                      onClick={() =>
+                        window.open(
+                          `${process.env.REACT_APP_FRONT_USER_URL}/product/${product.id}`,
+                          '_blank',
+                        )
+                      }
+                      sx={{
+                        cursor: 'pointer',
+                        '&:hover': {
+                          textDecoration: 'underline',
+                          color: '#00DE90',
+                        },
+                      }}
+                    >
                       {product.id}
                     </TableCell>
                     <TableCell align="center" className="sticky sticky-2">
