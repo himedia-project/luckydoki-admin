@@ -58,7 +58,7 @@ const Header = () => {
   return (
     <>
       <AppBar position="static" sx={{ bgcolor: '#00DE90', boxShadow: 'none' }}>
-        <Toolbar>
+        <Toolbar sx={{ minHeight: '80px !important' }}>
           <Typography
             variant="h6"
             component={Link}
