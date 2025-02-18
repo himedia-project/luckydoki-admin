@@ -173,7 +173,7 @@ const EventPage = () => {
           <Table>
             <TableHead>
               <TableRow sx={{ bgcolor: '#F8FFF8' }}>
-                <TableCell padding="checkbox">
+                <TableCell padding="checkbox" sx={{ width: '48px' }}>
                   <Checkbox
                     checked={selectedEvents.length === events.length}
                     indeterminate={
@@ -185,13 +185,13 @@ const EventPage = () => {
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A', width: '80px' }}
                 >
                   ID
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A', width: '200px' }}
                 >
                   이벤트명
                 </TableCell>
@@ -203,25 +203,25 @@ const EventPage = () => {
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A', width: '120px' }}
                 >
                   이미지
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A', width: '120px' }}
                 >
                   시작일
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A', width: '120px' }}
                 >
                   종료일
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ fontWeight: 'bold', color: '#1A1A1A', width: '120px' }}
                 >
                   관리
                 </TableCell>
@@ -260,15 +260,25 @@ const EventPage = () => {
                     </TableCell>
                     <TableCell align="center">{event.id}</TableCell>
                     <TableCell align="center">{event.title}</TableCell>
-                    <TableCell align="center">{event.content}</TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        maxWidth: '300px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {event.content}
+                    </TableCell>
                     <TableCell align="center">
                       {event.image && (
                         <ImageLoader
                           imagePath={event.image}
                           alt={event.title}
                           sx={{
-                            width: 40,
-                            height: 40,
+                            width: 80,
+                            height: 80,
                             objectFit: 'cover',
                             borderRadius: '4px',
                           }}
