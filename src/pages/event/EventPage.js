@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getList, deleteEvent } from '../../api/eventApi';
+import { getList, deleteEvent, getEvent } from '../../api/eventApi';
 import {
   Container,
   Grid,
@@ -25,6 +25,7 @@ import CreateEventModal from '../../components/event/CreateEventModal';
 import AlertModal from '../../components/common/AlertModal';
 import ConfirmModal from '../../components/common/ConfirmModal';
 import ImageLoader from '../../components/image/ImageLoader';
+import EventDetailModal from '../../components/event/EventDetailModal';
 
 const EventPage = () => {
   const [events, setEvents] = useState([]);
@@ -37,6 +38,8 @@ const EventPage = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
+  const [selectedEventDetail, setSelectedEventDetail] = useState(null);
+  const [eventDetailOpen, setEventDetailOpen] = useState(false);
 
   const fetchEvents = async () => {
     const params = {
@@ -104,6 +107,18 @@ const EventPage = () => {
     } catch (error) {
       console.error('이벤트 삭제 중 오류 발생:', error);
       setAlertMessage('이벤트 삭제 중 오류가 발생했습니다.');
+      setAlertOpen(true);
+    }
+  };
+
+  const handleEventClick = async (eventId) => {
+    try {
+      const response = await getEvent(eventId);
+      setSelectedEventDetail(response);
+      setEventDetailOpen(true);
+    } catch (error) {
+      console.error('이벤트 상세 정보 로딩 실패:', error);
+      setAlertMessage('이벤트 상세 정보를 불러오는데 실패했습니다.');
       setAlertOpen(true);
     }
   };
@@ -259,7 +274,19 @@ const EventPage = () => {
                       />
                     </TableCell>
                     <TableCell align="center">{event.id}</TableCell>
-                    <TableCell align="center">{event.title}</TableCell>
+                    <TableCell
+                      align="center"
+                      onClick={() => handleEventClick(event.id)}
+                      sx={{
+                        cursor: 'pointer',
+                        '&:hover': {
+                          color: '#00DE90',
+                          textDecoration: 'underline',
+                        },
+                      }}
+                    >
+                      {event.title}
+                    </TableCell>
                     <TableCell
                       align="center"
                       sx={{
@@ -290,6 +317,7 @@ const EventPage = () => {
                     <TableCell align="center">
                       <IconButton
                         size="small"
+                        onClick={() => handleEventClick(event.id)}
                         sx={{
                           color: '#00DE90',
                           '&:hover': { bgcolor: 'rgba(0, 222, 144, 0.1)' },
@@ -341,6 +369,12 @@ const EventPage = () => {
           title="알림"
           message={alertMessage}
           isSuccess={true}
+        />
+
+        <EventDetailModal
+          open={eventDetailOpen}
+          onClose={() => setEventDetailOpen(false)}
+          event={selectedEventDetail}
         />
       </Container>
     </div>
