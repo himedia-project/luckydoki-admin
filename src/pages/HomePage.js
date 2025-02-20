@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Paper, Typography, Grid } from '@mui/material';
+import ImageLoader from './components/image/ImageLoader';
 
 const DashboardCard = ({ title, value }) => (
   <Paper

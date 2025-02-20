@@ -9,6 +9,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import CelebrationIcon from '@mui/icons-material/Celebration';
+import ImageIcon from '@mui/icons-material/Image';
 
 import { logoutPost } from '../api/loginApi';
 import { logout } from '../app/redux/loginSlice';
@@ -198,6 +199,24 @@ const Header = () => {
               }}
             >
               <CelebrationIcon /> 이벤트
+            </Typography>
+            <Typography
+              component={Link}
+              to="/image-test"
+              onClick={(e) => {
+                e.preventDefault();
+                checkLoginAndNavigate('/image-test');
+              }}
+              sx={{
+                color: 'white',
+                textDecoration: 'none',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5,
+              }}
+            >
+              <ImageIcon /> 이미지 테스트
             </Typography>
             {email ? (
               <Button

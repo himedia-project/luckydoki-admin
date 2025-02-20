@@ -14,7 +14,7 @@ import LoginPage from './pages/login/LoginPage';
 import IssuedCouponPage from './pages/coupon/IssuedCouponPage';
 import SellerPage from './pages/shop/SellerPage';
 import ShopPage from './pages/shop/ShopPage';
-
+import ImageTestPage from './pages/ImageTestPage';
 function App() {
   return (
     <Routes>
@@ -29,6 +29,7 @@ function App() {
         <Route path="/coupon" element={<CouponPage />} />
         <Route path="/issued-coupon" element={<IssuedCouponPage />} />
         <Route path="/event" element={<EventPage />} />
+        <Route path="/image-test" element={<ImageTestPage />} />
       </Route>
       {/* 404 */}
       <Route path="*" element={<NotFoundPage />} />
