@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { forecastPost, forecastPostByDate } from '../api/salesApi';
+import axiosInstance from '../api/axiosInstance';
 
 const TestPage = () => {
   // 기본 전체 데이터 그래프 상태
@@ -15,10 +17,9 @@ const TestPage = () => {
 
   // 기본 예측 그래프 (전체 데이터 기반) 호출
   useEffect(() => {
-    axios
-      .post('http://localhost:8080/api/sales/forecast')
+    forecastPost()
       .then((response) => {
-        setDefaultData(response.data);
+        setDefaultData(response);
         setLoadingDefault(false);
       })
       .catch((err) => {
@@ -34,12 +35,9 @@ const TestPage = () => {
     setErrorDate('');
     setDateData(null);
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/sales/forecast/date',
-        {
-          selectedDate: selectedDate,
-        },
-      );
+      const response = await axiosInstance.post('/sales/forecast/date', {
+        selectedDate: selectedDate,
+      });
       setDateData(response.data);
     } catch (err) {
       setErrorDate(err.message);

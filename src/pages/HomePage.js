@@ -1,5 +1,6 @@
 import { Box, Grid, Paper, Typography } from '@mui/material';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const DashboardCard = ({ title, value }) => (
   <Paper
@@ -53,6 +54,7 @@ const HomePage = () => {
           <DashboardCard title="문의사항" value="5" />
         </Grid>
       </Grid>
+      <Link to={'/test'}>test</Link>
     </Box>
   );
 };
