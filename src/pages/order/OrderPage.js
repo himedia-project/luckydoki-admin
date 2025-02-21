@@ -19,6 +19,37 @@ import { getList, getDetail } from '../../api/orderApi';
 import PageComponent from '../../components/common/PageComponent';
 import OrderDetailModal from '../../components/order/OrderDetailModal';
 
+const ORDER_STATUS = {
+  ORDER: '주문중',
+  CONFIRM: '결제완료',
+  CANCEL: '주문취소',
+};
+
+const getStatusStyle = (status) => {
+  switch (status) {
+    case 'ORDER':
+      return {
+        color: '#00875A',
+        bgcolor: '#E6F4ED',
+      };
+    case 'CONFIRM':
+      return {
+        color: '#1E40AF', // 진한 파란색
+        bgcolor: '#DBEAFE', // 연한 파란색
+      };
+    case 'CANCEL':
+      return {
+        color: '#B42318', // 진한 빨간색
+        bgcolor: '#FEE4E2', // 연한 빨간색
+      };
+    default:
+      return {
+        color: '#666666',
+        bgcolor: '#F5F5F5',
+      };
+  }
+};
+
 const OrderPage = () => {
   const [orders, setOrders] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -215,20 +246,10 @@ const OrderPage = () => {
                           borderRadius: 1,
                           fontSize: '0.875rem',
                           fontWeight: 'medium',
-                          ...(order.orderStatus === 'ORDER'
-                            ? {
-                                color: '#00875A',
-                                bgcolor: '#E6F4ED',
-                              }
-                            : {
-                                color: '#B42318',
-                                bgcolor: '#FEE4E2',
-                              }),
+                          ...getStatusStyle(order.orderStatus),
                         }}
                       >
-                        {order.orderStatus === 'ORDER'
-                          ? '주문완료'
-                          : '주문취소'}
+                        {ORDER_STATUS[order.orderStatus] || '-'}
                       </Box>
                     </TableCell>
                     <TableCell align="center">

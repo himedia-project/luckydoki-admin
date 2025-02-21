@@ -211,6 +211,7 @@ const ProductPage = () => {
     setSortOrder('desc');
     setPageSize(10);
     setPage(1);
+    setSelectedProducts([]);
     fetchProducts();
   };
 
@@ -429,6 +430,7 @@ const ProductPage = () => {
 
   const handleSearch = () => {
     setPage(1); // 검색 시 첫 페이지로 이동
+    setSelectedProducts([]); // 선택된 상품 초기화
     fetchProducts();
   };
 

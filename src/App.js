@@ -15,7 +15,7 @@ import IssuedCouponPage from './pages/coupon/IssuedCouponPage';
 import SellerPage from './pages/shop/SellerPage';
 import ShopPage from './pages/shop/ShopPage';
 import TestPage from './pages/TestPage';
-
+import ImageTestPage from './pages/ImageTestPage';
 function App() {
   return (
     <Routes>
@@ -31,6 +31,7 @@ function App() {
         <Route path="/issued-coupon" element={<IssuedCouponPage />} />
         <Route path="/event" element={<EventPage />} />
         <Route path="/test" element={<TestPage />} />
+        <Route path="/image-test" element={<ImageTestPage />} />
       </Route>
       {/* 404 */}
       <Route path="*" element={<NotFoundPage />} />

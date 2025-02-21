@@ -1,5 +1,5 @@
+import { Box, Grid, Paper, Typography } from '@mui/material';
 import React from 'react';
-import { Box, Paper, Typography, Grid } from '@mui/material';
 
 const DashboardCard = ({ title, value }) => (
   <Paper

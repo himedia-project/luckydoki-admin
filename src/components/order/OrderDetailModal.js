@@ -3,6 +3,38 @@ import { Modal, Box, Typography, Grid, Paper, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ImageLoader from '../image/ImageLoader';
 
+// 상수 추가
+const ORDER_STATUS = {
+  ORDER: '주문중',
+  CONFIRM: '결제완료',
+  CANCEL: '주문취소',
+};
+
+const getStatusStyle = (status) => {
+  switch (status) {
+    case 'ORDER':
+      return {
+        color: '#00875A',
+        bgcolor: '#E6F4ED',
+      };
+    case 'CONFIRM':
+      return {
+        color: '#1E40AF',
+        bgcolor: '#DBEAFE',
+      };
+    case 'CANCEL':
+      return {
+        color: '#B42318',
+        bgcolor: '#FEE4E2',
+      };
+    default:
+      return {
+        color: '#666666',
+        bgcolor: '#F5F5F5',
+      };
+  }
+};
+
 const OrderDetailModal = ({ open, onClose, order }) => {
   if (!order) return null;
 
@@ -78,18 +110,10 @@ const OrderDetailModal = ({ open, onClose, order }) => {
                 borderRadius: 1,
                 display: 'inline-block',
                 mt: 0.5,
-                ...(order.orderStatus === 'ORDER'
-                  ? {
-                      color: '#00875A',
-                      bgcolor: '#E6F4ED',
-                    }
-                  : {
-                      color: '#B42318',
-                      bgcolor: '#FEE4E2',
-                    }),
+                ...getStatusStyle(order.orderStatus),
               }}
             >
-              {order.orderStatus === 'ORDER' ? '주문완료' : '주문취소'}
+              {ORDER_STATUS[order.orderStatus] || '-'}
             </Box>
           </Grid>
         </Grid>
