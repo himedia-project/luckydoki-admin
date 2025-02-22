@@ -38,6 +38,24 @@ const DashboardCard = ({ title, value, onClick }) => (
       sx={{
         color: '#00DE90',
         fontWeight: 'bold',
+        position: 'relative',
+        display: 'inline-block',
+        '&::after': onClick && {
+          content: '""',
+          position: 'absolute',
+          width: '100%',
+          height: '2px',
+          bottom: 0,
+          left: 0,
+          backgroundColor: '#00DE90',
+          transform: 'scaleX(0)',
+          transformOrigin: 'bottom right',
+          transition: 'transform 0.3s ease',
+        },
+        '&:hover::after': onClick && {
+          transform: 'scaleX(1)',
+          transformOrigin: 'bottom left',
+        },
       }}
     >
       {value}
