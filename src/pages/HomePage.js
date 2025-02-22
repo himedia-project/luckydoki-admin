@@ -124,6 +124,7 @@ const ProductCard = ({ product, rank }) => (
         imagePath={product.uploadFileNames[0]}
         alt={product.name}
         sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        type="product"
       />
     </Avatar>
     <ListItemText
@@ -133,16 +134,61 @@ const ProductCard = ({ product, rank }) => (
         </Typography>
       }
       secondary={
-        <Typography sx={{ color: '#666', fontSize: '0.875rem' }}>
-          ₩{product.discountPrice.toLocaleString()} • 좋아요{' '}
-          {product.reviewCount}개
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+          <Typography
+            component="span"
+            sx={{ color: '#00BA78', fontWeight: 500, fontSize: '0.875rem' }}
+          >
+            ₩{product.discountPrice.toLocaleString()}
+          </Typography>
+          <Typography
+            component="span"
+            sx={{
+              color: '#666',
+              fontSize: '0.875rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+            }}
+          >
+            •
+          </Typography>
+          <Typography
+            component="span"
+            sx={{
+              color: '#666',
+              fontSize: '0.875rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+            }}
+          >
+            ⭐ {product.reviewAverage.toFixed(1)}
+            <Typography
+              component="span"
+              sx={{ color: '#999', fontSize: '0.75rem' }}
+            >
+              ({product.reviewCount})
+            </Typography>
+          </Typography>
+          <Typography
+            component="span"
+            sx={{
+              color: '#666',
+              fontSize: '0.875rem',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            🩷 {product.likesCount}
+          </Typography>
+        </Box>
       }
     />
   </ListItem>
 );
 
-const UserCard = ({ user, rank }) => (
+const UserCard = ({ user, rank, isSeller }) => (
   <ListItem
     sx={{
       bgcolor: 'white',
@@ -172,6 +218,23 @@ const UserCard = ({ user, rank }) => (
     >
       {rank}
     </Box>
+    <Avatar
+      sx={{
+        mr: 2,
+        width: 40,
+        height: 40,
+        borderRadius: isSeller ? 2 : '50%',
+        bgcolor: '#f5f5f5',
+        border: '1px solid rgba(0,0,0,0.05)',
+      }}
+    >
+      <ImageLoader
+        imagePath={isSeller ? user?.shopImage : user?.profileImage}
+        alt={user?.nickName || 'User'}
+        sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        type={isSeller ? 'shop' : 'user'}
+      />
+    </Avatar>
     <ListItemText
       primary={
         <Typography sx={{ fontWeight: 500, color: '#2c3e50' }}>
@@ -363,7 +426,7 @@ const HomePage = () => {
                   border: '1px solid rgba(0, 222, 144, 0.2)',
                 }}
               >
-                좋아요 + 구매율 기준
+                리뷰 평점 + 리뷰수 + 좋아요 + 구매율 기준
               </Typography>
             </Box>
             <List sx={{ maxHeight: 400, overflow: 'auto', px: 1 }}>
@@ -414,6 +477,7 @@ const HomePage = () => {
                   key={dashboardData.top5Sellers[index]?.email || index}
                   user={dashboardData.top5Sellers[index]}
                   rank={index + 1}
+                  isSeller={true}
                 />
               ))}
             </List>
@@ -456,6 +520,7 @@ const HomePage = () => {
                   key={dashboardData.top5GoodConsumers[index]?.email || index}
                   user={dashboardData.top5GoodConsumers[index]}
                   rank={index + 1}
+                  isSeller={false}
                 />
               ))}
             </List>
