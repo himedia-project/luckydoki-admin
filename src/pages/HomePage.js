@@ -14,7 +14,7 @@ import ImageLoader from '../components/image/ImageLoader';
 import { useNavigate } from 'react-router-dom';
 import { getDashboardData } from '../api/dashBoardApi';
 
-const DashboardCard = ({ title, value, onClick }) => (
+const DashboardCard = ({ title, value, onClick, description }) => (
   <Paper
     sx={{
       p: 3,
@@ -30,9 +30,28 @@ const DashboardCard = ({ title, value, onClick }) => (
     }}
     onClick={onClick}
   >
-    <Typography color="text.secondary" sx={{ mb: 1, fontSize: '0.9rem' }}>
-      {title}
-    </Typography>
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+      <Typography color="text.secondary" sx={{ fontSize: '0.9rem' }}>
+        {title}
+      </Typography>
+      {description && (
+        <Typography
+          component="span"
+          sx={{
+            ml: 1,
+            px: 1,
+            py: 0.3,
+            fontSize: '0.7rem',
+            bgcolor: 'rgba(0, 222, 144, 0.08)',
+            color: '#00BA78',
+            borderRadius: 1,
+            border: '1px solid rgba(0, 222, 144, 0.2)',
+          }}
+        >
+          {description}
+        </Typography>
+      )}
+    </Box>
     <Typography
       variant="h4"
       sx={{
@@ -168,6 +187,86 @@ const UserCard = ({ user, rank }) => (
   </ListItem>
 );
 
+const NotificationCard = ({ count, onClick }) => (
+  <Paper
+    sx={{
+      p: 2.5,
+      mb: 4,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      borderRadius: 2,
+      bgcolor: 'rgba(0, 222, 144, 0.08)',
+      border: '1px solid rgba(0, 222, 144, 0.2)',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+      '&:hover': {
+        bgcolor: 'rgba(0, 222, 144, 0.12)',
+        transform: 'translateY(-2px)',
+        boxShadow: '0 4px 12px rgba(0, 222, 144, 0.15)',
+      },
+    }}
+    onClick={onClick}
+  >
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box
+        sx={{
+          width: 6,
+          height: 6,
+          borderRadius: '50%',
+          bgcolor: '#00DE90',
+          mr: 2,
+          animation: 'pulse 2s infinite',
+          '@keyframes pulse': {
+            '0%': {
+              transform: 'scale(1)',
+              opacity: 1,
+            },
+            '50%': {
+              transform: 'scale(1.5)',
+              opacity: 0.5,
+            },
+            '100%': {
+              transform: 'scale(1)',
+              opacity: 1,
+            },
+          },
+        }}
+      />
+      <Typography
+        sx={{ color: '#2c3e50', fontWeight: 500, fontSize: '0.95rem' }}
+      >
+        새로운 판매자 승인 요청이 있습니다
+      </Typography>
+    </Box>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Typography
+        sx={{
+          color: '#00DE90',
+          fontWeight: 'bold',
+          bgcolor: 'white',
+          px: 2,
+          py: 0.75,
+          borderRadius: 5,
+          fontSize: '0.9rem',
+          boxShadow: '0 2px 8px rgba(0, 222, 144, 0.15)',
+        }}
+      >
+        {count}건
+      </Typography>
+      <Typography
+        sx={{
+          color: '#00DE90',
+          fontSize: '0.85rem',
+          fontWeight: 500,
+        }}
+      >
+        바로가기 →
+      </Typography>
+    </Box>
+  </Paper>
+);
+
 const HomePage = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const navigate = useNavigate();
@@ -196,6 +295,13 @@ const HomePage = () => {
         관리자 대시보드
       </Typography>
 
+      {dashboardData.sellerNotApprovedRequestCount > 0 && (
+        <NotificationCard
+          count={dashboardData.sellerNotApprovedRequestCount}
+          onClick={() => navigate('/seller')}
+        />
+      )}
+
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} md={3}>
           <DashboardCard
@@ -215,6 +321,7 @@ const HomePage = () => {
             title="신규 회원"
             value={dashboardData.newMemberCount.toLocaleString()}
             onClick={() => navigate('/member')}
+            description="최근 30일"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -235,12 +342,29 @@ const HomePage = () => {
               boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{ mb: 3, fontWeight: 'bold', color: '#2c3e50' }}
-            >
-              인기 상품 Top 10
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 'bold', color: '#2c3e50' }}
+              >
+                인기 상품 Top 10
+              </Typography>
+              <Typography
+                component="span"
+                sx={{
+                  ml: 2,
+                  px: 1.5,
+                  py: 0.5,
+                  fontSize: '0.75rem',
+                  bgcolor: 'rgba(0, 222, 144, 0.08)',
+                  color: '#00BA78',
+                  borderRadius: 1,
+                  border: '1px solid rgba(0, 222, 144, 0.2)',
+                }}
+              >
+                좋아요 + 구매율 기준
+              </Typography>
+            </Box>
             <List sx={{ maxHeight: 400, overflow: 'auto', px: 1 }}>
               {dashboardData.top10Products.map((product, index) => (
                 <ProductCard
@@ -260,12 +384,29 @@ const HomePage = () => {
               boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{ mb: 3, fontWeight: 'bold', color: '#2c3e50' }}
-            >
-              Top 5 Sellers
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 'bold', color: '#2c3e50' }}
+              >
+                Top 5 Sellers
+              </Typography>
+              <Typography
+                component="span"
+                sx={{
+                  ml: 2,
+                  px: 1.5,
+                  py: 0.5,
+                  fontSize: '0.75rem',
+                  bgcolor: 'rgba(0, 222, 144, 0.08)',
+                  color: '#00BA78',
+                  borderRadius: 1,
+                  border: '1px solid rgba(0, 222, 144, 0.2)',
+                }}
+              >
+                판매량 기준
+              </Typography>
+            </Box>
             <List sx={{ px: 1 }}>
               {[...Array(5)].map((_, index) => (
                 <UserCard
@@ -285,12 +426,29 @@ const HomePage = () => {
               boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{ mb: 3, fontWeight: 'bold', color: '#2c3e50' }}
-            >
-              Top 5 Consumers
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 'bold', color: '#2c3e50' }}
+              >
+                Top 5 Consumers
+              </Typography>
+              <Typography
+                component="span"
+                sx={{
+                  ml: 2,
+                  px: 1.5,
+                  py: 0.5,
+                  fontSize: '0.75rem',
+                  bgcolor: 'rgba(0, 222, 144, 0.08)',
+                  color: '#00BA78',
+                  borderRadius: 1,
+                  border: '1px solid rgba(0, 222, 144, 0.2)',
+                }}
+              >
+                리뷰 수 기준
+              </Typography>
+            </Box>
             <List sx={{ px: 1 }}>
               {[...Array(5)].map((_, index) => (
                 <UserCard
