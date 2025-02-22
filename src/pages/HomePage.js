@@ -13,6 +13,7 @@ import ImageLoader from '../components/image/ImageLoader';
 
 import { useNavigate } from 'react-router-dom';
 import { getDashboardData } from '../api/dashBoardApi';
+import { FRONT_USER_HOST } from '../config/apiConfig';
 
 const DashboardCard = ({ title, value, onClick, description }) => (
   <Paper
@@ -90,11 +91,16 @@ const ProductCard = ({ product, rank }) => (
       borderRadius: 2,
       boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
       transition: 'all 0.2s ease',
+      cursor: 'pointer',
       '&:hover': {
         transform: 'translateY(-2px)',
         boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        bgcolor: 'rgba(0, 222, 144, 0.02)',
       },
     }}
+    onClick={() =>
+      window.open(`${FRONT_USER_HOST}/product/${product.id}`, '_blank')
+    }
   >
     <Box
       sx={{
@@ -181,6 +187,18 @@ const ProductCard = ({ product, rank }) => (
             }}
           >
             🩷 {product.likesCount}
+          </Typography>
+          <Typography
+            component="span"
+            sx={{
+              color: '#666',
+              fontSize: '0.875rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+            }}
+          >
+            📦 {product.salesCount}
           </Typography>
         </Box>
       }
@@ -468,7 +486,7 @@ const HomePage = () => {
                   border: '1px solid rgba(0, 222, 144, 0.2)',
                 }}
               >
-                판매량 기준
+                판매량 +판매액 기준
               </Typography>
             </Box>
             <List sx={{ px: 1 }}>
