@@ -49,7 +49,9 @@ axiosInstance.interceptors.response.use(
       // const accessToken = result.newAccessToken;
 
       // 로그인 성공 시 Redux store 업데이트
-      useDispatch(
+      // interceptor에서는 직접 store.dispatch를 사용해야
+      // useDispatch(
+      store.dispatch(
         login({
           email: result.email,
           roles: result.roles,
