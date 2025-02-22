@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { getDashboardData } from '../api/dashBoardApi';
 import { FRONT_USER_HOST } from '../config/apiConfig';
 
-const DashboardCard = ({ title, value, onClick, description }) => (
+const DashboardCard = ({ title, value, secondValue, onClick, description }) => (
   <Paper
     sx={{
       p: 3,
@@ -53,33 +53,65 @@ const DashboardCard = ({ title, value, onClick, description }) => (
         </Typography>
       )}
     </Box>
-    <Typography
-      variant="h4"
-      sx={{
-        color: '#00DE90',
-        fontWeight: 'bold',
-        position: 'relative',
-        display: 'inline-block',
-        '&::after': onClick && {
-          content: '""',
-          position: 'absolute',
-          width: '100%',
-          height: '2px',
-          bottom: 0,
-          left: 0,
-          backgroundColor: '#00DE90',
-          transform: 'scaleX(0)',
-          transformOrigin: 'bottom right',
-          transition: 'transform 0.3s ease',
-        },
-        '&:hover::after': onClick && {
-          transform: 'scaleX(1)',
-          transformOrigin: 'bottom left',
-        },
-      }}
-    >
-      {value}
-    </Typography>
+    {secondValue ? (
+      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+        <Typography
+          variant="h4"
+          sx={{
+            color: '#00DE90',
+            fontWeight: 'bold',
+          }}
+        >
+          {value}
+        </Typography>
+        <Typography
+          sx={{
+            color: '#666',
+            fontSize: '1.5rem',
+            fontWeight: 500,
+          }}
+        >
+          /
+        </Typography>
+        <Typography
+          variant="h4"
+          sx={{
+            color: '#00DE90',
+            fontWeight: 'bold',
+          }}
+        >
+          {secondValue}
+        </Typography>
+      </Box>
+    ) : (
+      <Typography
+        variant="h4"
+        sx={{
+          color: '#00DE90',
+          fontWeight: 'bold',
+          position: 'relative',
+          display: 'inline-block',
+          '&::after': onClick && {
+            content: '""',
+            position: 'absolute',
+            width: '100%',
+            height: '2px',
+            bottom: 0,
+            left: 0,
+            backgroundColor: '#00DE90',
+            transform: 'scaleX(0)',
+            transformOrigin: 'bottom right',
+            transition: 'transform 0.3s ease',
+          },
+          '&:hover::after': onClick && {
+            transform: 'scaleX(1)',
+            transformOrigin: 'bottom left',
+          },
+        }}
+      >
+        {value}
+      </Typography>
+    )}
   </Paper>
 );
 
@@ -408,8 +440,9 @@ const HomePage = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <DashboardCard
-            title="총 상품"
+            title="총 상품 / 커뮤니티글"
             value={dashboardData.totalProductCount.toLocaleString()}
+            secondValue={dashboardData.totalCommunityCount.toLocaleString()}
             onClick={() => navigate('/product')}
           />
         </Grid>
