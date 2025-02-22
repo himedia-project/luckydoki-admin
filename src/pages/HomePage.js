@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ImageLoader from '../components/image/ImageLoader';
+import ReportGenerator from '../components/report/ReportGenerator';
 
 import { useNavigate } from 'react-router-dom';
 import { getDashboardData } from '../api/dashBoardApi';
@@ -400,13 +401,22 @@ const HomePage = () => {
   if (!dashboardData) return null;
 
   return (
-    <Box sx={{ p: 4, bgcolor: '#f5f5f5', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        p: 4,
+        bgcolor: '#f5f5f5',
+        minHeight: '100vh',
+        position: 'relative',
+      }}
+    >
       <Typography
         variant="h5"
         sx={{ mb: 4, color: '#333', fontWeight: 'bold' }}
       >
         관리자 대시보드
       </Typography>
+
+      <ReportGenerator dashboardData={dashboardData} />
 
       {dashboardData.sellerNotApprovedRequestCount > 0 && (
         <NotificationCard
