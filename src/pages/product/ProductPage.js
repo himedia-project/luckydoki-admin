@@ -1048,6 +1048,7 @@ const ProductPage = () => {
                             objectFit: 'cover',
                             borderRadius: '4px',
                           }}
+                          type="product"
                         />
                       )}
                     </TableCell>

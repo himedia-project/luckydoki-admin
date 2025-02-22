@@ -37,7 +37,6 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    // const navigate = useNavigate();
     console.log('interceptor error: ', error);
     if (
       error.response.data &&
@@ -46,11 +45,8 @@ axiosInstance.interceptors.response.use(
       const result = await refreshJWT();
       console.log('refreshJWT RESULT', result);
 
-      // const accessToken = result.newAccessToken;
-
       // 로그인 성공 시 Redux store 업데이트
       // interceptor에서는 직접 store.dispatch를 사용해야
-      // useDispatch(
       store.dispatch(
         login({
           email: result.email,
@@ -61,6 +57,24 @@ axiosInstance.interceptors.response.use(
 
       return axiosInstance(error.config); // 재요청
     }
+
+    if (
+      error.response.data &&
+      error.response.data.error === 'ERROR_ACCESSDENIED'
+    ) {
+      // Modal 표시를 위해 전역 이벤트 발생
+      const event = new CustomEvent('showAlertModal', {
+        detail: {
+          title: '접근 오류',
+          message: '세션이 만료되었습니다. 다시 로그인해 주세요.',
+          onConfirm: () => {
+            window.location.href = '/login'; // 또는 로그인 페이지 경로
+          },
+        },
+      });
+      window.dispatchEvent(event);
+    }
+
     return Promise.reject(error);
   },
 );

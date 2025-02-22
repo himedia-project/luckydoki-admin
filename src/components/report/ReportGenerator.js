@@ -66,7 +66,7 @@ const ReportGenerator = ({ dashboardData }) => {
         {loading ? (
           <CircularProgress size={24} sx={{ color: 'white' }} />
         ) : (
-          '월간 리포트 생성'
+          'AI ✨ 리포트 생성'
         )}
       </Button>
 
