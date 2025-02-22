@@ -10,16 +10,25 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ImageLoader from '../components/image/ImageLoader';
-import { getDashboardData } from '../api/ashBoardApi';
 
-const DashboardCard = ({ title, value }) => (
+import { useNavigate } from 'react-router-dom';
+import { getDashboardData } from '../api/dashBoardApi';
+
+const DashboardCard = ({ title, value, onClick }) => (
   <Paper
     sx={{
       p: 3,
       borderRadius: 2,
       bgcolor: 'white',
       boxShadow: '0 4px 20px rgba(0, 222, 144, 0.1)',
+      cursor: onClick ? 'pointer' : 'default',
+      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+      '&:hover': onClick && {
+        transform: 'translateY(-4px)',
+        boxShadow: '0 6px 25px rgba(0, 222, 144, 0.2)',
+      },
     }}
+    onClick={onClick}
   >
     <Typography color="text.secondary" sx={{ mb: 1, fontSize: '0.9rem' }}>
       {title}
@@ -143,6 +152,7 @@ const UserCard = ({ user, rank }) => (
 
 const HomePage = () => {
   const [dashboardData, setDashboardData] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,6 +183,7 @@ const HomePage = () => {
           <DashboardCard
             title="총 주문"
             value={dashboardData.totalOrderCount.toLocaleString()}
+            onClick={() => navigate('/order')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -185,12 +196,14 @@ const HomePage = () => {
           <DashboardCard
             title="신규 회원"
             value={dashboardData.newMemberCount.toLocaleString()}
+            onClick={() => navigate('/member')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <DashboardCard
             title="총 상품"
             value={dashboardData.totalProductCount.toLocaleString()}
+            onClick={() => navigate('/product')}
           />
         </Grid>
       </Grid>
