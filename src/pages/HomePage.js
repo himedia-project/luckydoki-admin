@@ -308,6 +308,7 @@ const HomePage = () => {
             title="총 주문"
             value={dashboardData.totalOrderCount.toLocaleString()}
             onClick={() => navigate('/order')}
+            description="최근 30일"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
