@@ -1,5 +1,16 @@
-import { Box, Grid, Paper, Typography } from '@mui/material';
-import React from 'react';
+import {
+  Box,
+  Grid,
+  Paper,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Avatar,
+} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import ImageLoader from '../components/image/ImageLoader';
+import { getDashboardData } from '../api/ashBoardApi';
 
 const DashboardCard = ({ title, value }) => (
   <Paper
@@ -25,32 +36,120 @@ const DashboardCard = ({ title, value }) => (
   </Paper>
 );
 
+const ProductCard = ({ product }) => (
+  <ListItem sx={{ bgcolor: 'white', mb: 1, borderRadius: 1 }}>
+    <Avatar sx={{ mr: 2 }}>
+      <ImageLoader
+        imagePath={product.uploadFileNames[0]}
+        alt={product.name}
+        sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+      />
+    </Avatar>
+    <ListItemText
+      primary={product.name}
+      secondary={`₩${product.discountPrice.toLocaleString()} • 좋아요 ${
+        product.reviewCount
+      }개`}
+    />
+  </ListItem>
+);
+
+const UserCard = ({ user }) => (
+  <ListItem sx={{ bgcolor: 'white', mb: 1, borderRadius: 1 }}>
+    <ListItemText primary={user.nickName} secondary={user.email} />
+  </ListItem>
+);
+
 const HomePage = () => {
+  const [dashboardData, setDashboardData] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getDashboardData();
+        console.log('getDashboardData response', response);
+        setDashboardData(response.data);
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  if (!dashboardData) return null;
+
   return (
     <Box sx={{ p: 4, bgcolor: '#f5f5f5', minHeight: '100vh' }}>
       <Typography
         variant="h5"
-        sx={{
-          mb: 4,
-          color: '#333',
-          fontWeight: 'bold',
-        }}
+        sx={{ mb: 4, color: '#333', fontWeight: 'bold' }}
       >
         관리자 대시보드
       </Typography>
 
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} md={3}>
-          <DashboardCard title="총 주문" value="124" />
+          <DashboardCard
+            title="총 주문"
+            value={dashboardData.totalOrderCount.toLocaleString()}
+          />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <DashboardCard title="오늘의 매출" value="₩1,234,000" />
+          <DashboardCard
+            title="오늘의 매출"
+            value={`₩${dashboardData.todayRevenue.toLocaleString()}`}
+          />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <DashboardCard title="신규 회원" value="12" />
+          <DashboardCard
+            title="신규 회원"
+            value={dashboardData.newMemberCount.toLocaleString()}
+          />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
-          <DashboardCard title="문의사항" value="5" />
+          <DashboardCard
+            title="총 상품"
+            value={dashboardData.totalProductCount.toLocaleString()}
+          />
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+              인기 상품 Top 10
+            </Typography>
+            <List>
+              {dashboardData.top10Products.slice(0, 5).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </List>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <Paper sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+              Top 5 Sellers
+            </Typography>
+            <List>
+              {dashboardData.top5Sellers.map((seller) => (
+                <UserCard key={seller.email} user={seller} />
+              ))}
+            </List>
+          </Paper>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <Paper sx={{ p: 3, borderRadius: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+              Top 5 Consumers
+            </Typography>
+            <List>
+              {dashboardData.top5GoodConsumers.map((consumer) => (
+                <UserCard key={consumer.email} user={consumer} />
+              ))}
+            </List>
+          </Paper>
         </Grid>
       </Grid>
     </Box>
