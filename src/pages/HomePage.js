@@ -36,9 +36,44 @@ const DashboardCard = ({ title, value }) => (
   </Paper>
 );
 
-const ProductCard = ({ product }) => (
-  <ListItem sx={{ bgcolor: 'white', mb: 1, borderRadius: 1 }}>
-    <Avatar sx={{ mr: 2 }}>
+const ProductCard = ({ product, rank }) => (
+  <ListItem
+    sx={{
+      bgcolor: 'white',
+      mb: 1.5,
+      borderRadius: 2,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+      transition: 'all 0.2s ease',
+      '&:hover': {
+        transform: 'translateY(-2px)',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      },
+    }}
+  >
+    <Box
+      sx={{
+        minWidth: 32,
+        height: 32,
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: rank <= 3 ? '#00DE90' : '#f5f5f5',
+        color: rank <= 3 ? 'white' : '#666',
+        fontWeight: 'bold',
+        mr: 2,
+      }}
+    >
+      {rank}
+    </Box>
+    <Avatar
+      sx={{
+        mr: 2,
+        width: 48,
+        height: 48,
+        borderRadius: 2,
+      }}
+    >
       <ImageLoader
         imagePath={product.uploadFileNames[0]}
         alt={product.name}
@@ -46,17 +81,63 @@ const ProductCard = ({ product }) => (
       />
     </Avatar>
     <ListItemText
-      primary={product.name}
-      secondary={`₩${product.discountPrice.toLocaleString()} • 좋아요 ${
-        product.reviewCount
-      }개`}
+      primary={
+        <Typography sx={{ fontWeight: 500, color: '#2c3e50' }}>
+          {product.name}
+        </Typography>
+      }
+      secondary={
+        <Typography sx={{ color: '#666', fontSize: '0.875rem' }}>
+          ₩{product.discountPrice.toLocaleString()} • 좋아요{' '}
+          {product.reviewCount}개
+        </Typography>
+      }
     />
   </ListItem>
 );
 
-const UserCard = ({ user }) => (
-  <ListItem sx={{ bgcolor: 'white', mb: 1, borderRadius: 1 }}>
-    <ListItemText primary={user.nickName} secondary={user.email} />
+const UserCard = ({ user, rank }) => (
+  <ListItem
+    sx={{
+      bgcolor: 'white',
+      mb: 1.5,
+      borderRadius: 2,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+      transition: 'all 0.2s ease',
+      '&:hover': {
+        transform: 'translateY(-2px)',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      },
+    }}
+  >
+    <Box
+      sx={{
+        minWidth: 32,
+        height: 32,
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: rank <= 3 ? '#00DE90' : '#f5f5f5',
+        color: rank <= 3 ? 'white' : '#666',
+        fontWeight: 'bold',
+        mr: 2,
+      }}
+    >
+      {rank}
+    </Box>
+    <ListItemText
+      primary={
+        <Typography sx={{ fontWeight: 500, color: '#2c3e50' }}>
+          {user?.nickName || '-'}
+        </Typography>
+      }
+      secondary={
+        <Typography sx={{ color: '#666', fontSize: '0.875rem' }}>
+          {user?.email || '-'}
+        </Typography>
+      }
+    />
   </ListItem>
 );
 
@@ -116,37 +197,76 @@ const HomePage = () => {
 
       <Grid container spacing={3} sx={{ mt: 2 }}>
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: 2,
+              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{ mb: 3, fontWeight: 'bold', color: '#2c3e50' }}
+            >
               인기 상품 Top 10
             </Typography>
-            <List>
-              {dashboardData.top10Products.slice(0, 5).map((product) => (
-                <ProductCard key={product.id} product={product} />
+            <List sx={{ maxHeight: 400, overflow: 'auto', px: 1 }}>
+              {dashboardData.top10Products.map((product, index) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  rank={index + 1}
+                />
               ))}
             </List>
           </Paper>
         </Grid>
         <Grid item xs={12} md={3}>
-          <Paper sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: 2,
+              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{ mb: 3, fontWeight: 'bold', color: '#2c3e50' }}
+            >
               Top 5 Sellers
             </Typography>
-            <List>
-              {dashboardData.top5Sellers.map((seller) => (
-                <UserCard key={seller.email} user={seller} />
+            <List sx={{ px: 1 }}>
+              {[...Array(5)].map((_, index) => (
+                <UserCard
+                  key={dashboardData.top5Sellers[index]?.email || index}
+                  user={dashboardData.top5Sellers[index]}
+                  rank={index + 1}
+                />
               ))}
             </List>
           </Paper>
         </Grid>
         <Grid item xs={12} md={3}>
-          <Paper sx={{ p: 3, borderRadius: 2 }}>
-            <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+          <Paper
+            sx={{
+              p: 3,
+              borderRadius: 2,
+              boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+            }}
+          >
+            <Typography
+              variant="h6"
+              sx={{ mb: 3, fontWeight: 'bold', color: '#2c3e50' }}
+            >
               Top 5 Consumers
             </Typography>
-            <List>
-              {dashboardData.top5GoodConsumers.map((consumer) => (
-                <UserCard key={consumer.email} user={consumer} />
+            <List sx={{ px: 1 }}>
+              {[...Array(5)].map((_, index) => (
+                <UserCard
+                  key={dashboardData.top5GoodConsumers[index]?.email || index}
+                  user={dashboardData.top5GoodConsumers[index]}
+                  rank={index + 1}
+                />
               ))}
             </List>
           </Paper>
