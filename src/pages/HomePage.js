@@ -8,6 +8,8 @@ import {
   ListItemText,
   Avatar,
   Button,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ImageLoader from '../components/image/ImageLoader';
@@ -382,9 +384,93 @@ const NotificationCard = ({ count, onClick }) => (
   </Paper>
 );
 
+const CommunityCard = ({ community, rank }) => (
+  <ListItem
+    sx={{
+      bgcolor: 'white',
+      mb: 1.5,
+      borderRadius: 2,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+      transition: 'all 0.2s ease',
+      cursor: 'pointer',
+      '&:hover': {
+        transform: 'translateY(-2px)',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        bgcolor: 'rgba(0, 222, 144, 0.02)',
+      },
+    }}
+    onClick={() =>
+      window.open(`${FRONT_USER_HOST}/community/${community.id}`, '_blank')
+    }
+  >
+    <Box
+      sx={{
+        minWidth: 32,
+        height: 32,
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: rank <= 3 ? '#00DE90' : '#f5f5f5',
+        color: rank <= 3 ? 'white' : '#666',
+        fontWeight: 'bold',
+        mr: 2,
+      }}
+    >
+      {rank}
+    </Box>
+    <Avatar
+      sx={{
+        mr: 2,
+        width: 48,
+        height: 48,
+        borderRadius: 2,
+      }}
+    >
+      <ImageLoader
+        imagePath={community.uploadFileNames[0]}
+        alt={community.title}
+        sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        type="community"
+      />
+    </Avatar>
+    <ListItemText
+      primary={
+        <Typography sx={{ fontWeight: 500, color: '#2c3e50' }}>
+          {community.title}
+        </Typography>
+      }
+      secondary={
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+          <Avatar src={community.shopImage} sx={{ width: 20, height: 20 }} />
+          <Typography
+            component="span"
+            sx={{ color: '#666', fontSize: '0.875rem' }}
+          >
+            {community.nickName}
+          </Typography>
+          <Typography
+            component="span"
+            sx={{ color: '#666', fontSize: '0.875rem' }}
+          >
+            •
+          </Typography>
+          <Typography
+            component="span"
+            sx={{ color: '#666', fontSize: '0.875rem' }}
+          >
+            {new Date(community.createdAt).toLocaleDateString()}
+          </Typography>
+        </Box>
+      }
+    />
+  </ListItem>
+);
+
 const HomePage = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -482,17 +568,34 @@ const HomePage = () => {
               boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-              <Typography
-                variant="h6"
-                sx={{ fontWeight: 'bold', color: '#2c3e50' }}
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+              <Tabs
+                value={activeTab}
+                onChange={(e, newValue) => setActiveTab(newValue)}
+                sx={{
+                  '& .MuiTab-root': {
+                    minHeight: '48px',
+                    textTransform: 'none',
+                    fontSize: '1rem',
+                    fontWeight: 500,
+                  },
+                  '& .Mui-selected': {
+                    color: '#00DE90 !important',
+                  },
+                  '& .MuiTabs-indicator': {
+                    backgroundColor: '#00DE90',
+                  },
+                }}
               >
-                인기 상품 Top 10
-              </Typography>
+                <Tab label="인기 상품 Top 10" />
+                <Tab label="인기 커뮤니티 Top 10" />
+              </Tabs>
+            </Box>
+
+            <Box sx={{ display: activeTab === 0 ? 'block' : 'none' }}>
               <Typography
                 component="span"
                 sx={{
-                  ml: 2,
                   px: 1.5,
                   py: 0.5,
                   fontSize: '0.75rem',
@@ -500,20 +603,50 @@ const HomePage = () => {
                   color: '#00BA78',
                   borderRadius: 1,
                   border: '1px solid rgba(0, 222, 144, 0.2)',
+                  mb: 2,
+                  display: 'inline-block',
                 }}
               >
                 리뷰 평점 + 리뷰수 + 좋아요 + 구매율 기준
               </Typography>
+              <List sx={{ maxHeight: 400, overflow: 'auto', px: 1, mt: 2 }}>
+                {dashboardData.top10Products.map((product, index) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    rank={index + 1}
+                  />
+                ))}
+              </List>
             </Box>
-            <List sx={{ maxHeight: 400, overflow: 'auto', px: 1 }}>
-              {dashboardData.top10Products.map((product, index) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  rank={index + 1}
-                />
-              ))}
-            </List>
+
+            <Box sx={{ display: activeTab === 1 ? 'block' : 'none' }}>
+              <Typography
+                component="span"
+                sx={{
+                  px: 1.5,
+                  py: 0.5,
+                  fontSize: '0.75rem',
+                  bgcolor: 'rgba(0, 222, 144, 0.08)',
+                  color: '#00BA78',
+                  borderRadius: 1,
+                  border: '1px solid rgba(0, 222, 144, 0.2)',
+                  mb: 2,
+                  display: 'inline-block',
+                }}
+              >
+                댓글 + 조회수 기준
+              </Typography>
+              <List sx={{ maxHeight: 400, overflow: 'auto', px: 1, mt: 2 }}>
+                {dashboardData.top10Communities.map((community, index) => (
+                  <CommunityCard
+                    key={community.id}
+                    community={community}
+                    rank={index + 1}
+                  />
+                ))}
+              </List>
+            </Box>
           </Paper>
         </Grid>
         <Grid item xs={12} md={3}>
