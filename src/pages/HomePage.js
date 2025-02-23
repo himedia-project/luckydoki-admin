@@ -7,6 +7,7 @@ import {
   ListItem,
   ListItemText,
   Avatar,
+  Button,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ImageLoader from '../components/image/ImageLoader';
@@ -409,12 +410,18 @@ const HomePage = () => {
         position: 'relative',
       }}
     >
-      <Typography
-        variant="h5"
-        sx={{ mb: 4, color: '#333', fontWeight: 'bold' }}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 4,
+        }}
       >
-        관리자 대시보드
-      </Typography>
+        <Typography variant="h5" sx={{ color: '#333', fontWeight: 'bold' }}>
+          관리자 대시보드
+        </Typography>
+      </Box>
 
       <ReportGenerator dashboardData={dashboardData} />
 

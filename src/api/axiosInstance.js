@@ -2,7 +2,6 @@ import axios from 'axios';
 import store from '../app/redux/store';
 import { setAccessToken, login } from '../app/redux/loginSlice';
 import { API_SERVER_HOST } from '../config/apiConfig';
-import { useDispatch } from 'react-redux';
 const axiosInstance = axios.create({
   baseURL: `${API_SERVER_HOST}/api/admin`,
   // 쿠키 허용

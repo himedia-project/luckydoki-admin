@@ -19,11 +19,7 @@ const ReportGenerator = ({ dashboardData }) => {
       setLoading(true);
       setError(null);
 
-      const response = await generateReport({
-        startDate: new Date(new Date().setDate(1)), // 이번달 1일
-        endDate: new Date(),
-        metrics: dashboardData,
-      });
+      const response = await generateReport(dashboardData);
 
       // PDF 다운로드 처리
       const blob = new Blob([response.data], { type: 'application/pdf' });
@@ -35,10 +31,12 @@ const ReportGenerator = ({ dashboardData }) => {
         .slice(0, 7)}.pdf`;
       link.click();
 
+      // 리소스 정리
+      window.URL.revokeObjectURL(url);
       setSuccess(true);
-    } catch (err) {
-      setError('리포트 생성 중 오류가 발생했습니다.');
-      console.error('Report generation failed:', err);
+    } catch (error) {
+      console.error('Report generation failed:', error);
+      setError('리포트 생성에 실패했습니다.');
     } finally {
       setLoading(false);
     }
