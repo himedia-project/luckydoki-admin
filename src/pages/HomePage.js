@@ -435,31 +435,39 @@ const HomePage = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} md={3}>
           <DashboardCard
+            title="매출"
+            value={`₩${Number(dashboardData.todayRevenue).toLocaleString()}`}
+            secondValue={`₩${Number(
+              dashboardData.monthlyRevenue,
+            ).toLocaleString()}`}
+            description="오늘 / 최근30일"
+            onClick={() => navigate('/order')}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <DashboardCard
             title="총 주문"
-            value={dashboardData.totalOrderCount.toLocaleString()}
+            value={Number(dashboardData.totalOrderCount).toLocaleString()}
             onClick={() => navigate('/order')}
             description="최근 30일"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <DashboardCard
-            title="오늘의 매출"
-            value={`₩${dashboardData.todayRevenue.toLocaleString()}`}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <DashboardCard
-            title="신규 회원"
-            value={dashboardData.newMemberCount.toLocaleString()}
+            title="신규 가입"
+            value={Number(dashboardData.newMemberCount).toLocaleString()}
+            secondValue={Number(dashboardData.newSellerCount).toLocaleString()}
+            description="회원 / 셀러"
             onClick={() => navigate('/member')}
-            description="최근 30일"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <DashboardCard
             title="총 상품 / 커뮤니티글"
-            value={dashboardData.totalProductCount.toLocaleString()}
-            secondValue={dashboardData.totalCommunityCount.toLocaleString()}
+            value={Number(dashboardData.totalProductCount).toLocaleString()}
+            secondValue={Number(
+              dashboardData.totalCommunityCount,
+            ).toLocaleString()}
             onClick={() => navigate('/product')}
           />
         </Grid>
