@@ -892,14 +892,14 @@ const ProductPage = () => {
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ minWidth: 150, fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 220, fontWeight: 'bold', color: '#1A1A1A' }}
                   className="sticky sticky-2"
                 >
-                  3차 카테고리
+                  카테고리
                 </TableCell>
                 <TableCell
                   align="center"
-                  sx={{ minWidth: 180, fontWeight: 'bold', color: '#1A1A1A' }}
+                  sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
                   className="sticky sticky-3"
                 >
                   샵이름
@@ -1031,8 +1031,12 @@ const ProductPage = () => {
                     >
                       {product.id}
                     </TableCell>
-                    <TableCell align="center" className="sticky sticky-2">
-                      {product.categoryName}
+                    <TableCell
+                      align="center"
+                      className="sticky sticky-2"
+                      style={{ minWidth: '200px' }} // 최소 너비 설정
+                    >
+                      {product.categoryAllName}
                     </TableCell>
                     <TableCell align="center" className="sticky sticky-3">
                       {product.shopName}
@@ -1043,11 +1047,12 @@ const ProductPage = () => {
                           imagePath={product.uploadFileNames[0]}
                           alt={product.name}
                           sx={{
-                            width: '60px',
-                            height: '60px',
+                            width: '80px',
+                            height: '80px',
                             objectFit: 'cover',
                             borderRadius: '4px',
                           }}
+                          type="product"
                         />
                       )}
                     </TableCell>

@@ -21,6 +21,8 @@ const CreateCouponModal = ({ open, onClose, onSuccess }) => {
     minimumUsageAmount: '',
   });
   const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,6 +35,8 @@ const CreateCouponModal = ({ open, onClose, onSuccess }) => {
   const handleSubmit = async () => {
     try {
       await create(couponData);
+      setIsSuccess(true);
+      setAlertMessage('등록이 완료되었습니다');
       setAlertOpen(true);
       onSuccess();
       setCouponData({
@@ -44,6 +48,9 @@ const CreateCouponModal = ({ open, onClose, onSuccess }) => {
         minimumUsageAmount: '',
       });
     } catch (error) {
+      setIsSuccess(false);
+      setAlertMessage('쿠폰 등록에 실패했습니다');
+      setAlertOpen(true);
       console.error('쿠폰 등록 실패:', error);
     }
   };
@@ -141,9 +148,9 @@ const CreateCouponModal = ({ open, onClose, onSuccess }) => {
         open={alertOpen}
         onClose={() => {
           setAlertOpen(false);
-          onClose();
+          if (isSuccess) onClose();
         }}
-        message="등록이 완료되었습니다"
+        message={alertMessage}
       />
     </>
   );

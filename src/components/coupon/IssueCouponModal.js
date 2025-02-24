@@ -30,6 +30,8 @@ const IssueCouponModal = ({ open, onClose, coupon, onSuccess }) => {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(true);
 
   const fetchMembers = async (pageNum = 1) => {
     try {
@@ -87,11 +89,18 @@ const IssueCouponModal = ({ open, onClose, coupon, onSuccess }) => {
   const handleSubmit = async () => {
     try {
       await issueCoupon(coupon.id, selectedEmails);
+      setIsSuccess(true);
+      setAlertMessage('발급이 완료되었습니다');
       setAlertOpen(true);
       onSuccess();
       setSelectedEmails([]);
     } catch (error) {
       console.error('쿠폰 발급 실패:', error);
+      setIsSuccess(false);
+      setAlertMessage(
+        error.response?.data?.errorMsg || '쿠폰 발급에 실패했습니다',
+      );
+      setAlertOpen(true);
     }
   };
 
@@ -214,9 +223,12 @@ const IssueCouponModal = ({ open, onClose, coupon, onSuccess }) => {
         open={alertOpen}
         onClose={() => {
           setAlertOpen(false);
-          onClose();
+          if (isSuccess) {
+            onClose();
+          }
         }}
-        message="발급이 완료되었습니다"
+        message={alertMessage}
+        severity={isSuccess ? 'success' : 'error'}
       />
     </>
   );

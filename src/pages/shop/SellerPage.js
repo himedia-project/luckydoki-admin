@@ -31,6 +31,8 @@ const SellerPage = () => {
   const [alertOpen, setAlertOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(true);
 
   const fetchSellers = async () => {
     const params = {
@@ -66,12 +68,23 @@ const SellerPage = () => {
     if (selectedSeller) {
       try {
         await sellerApi.approve(selectedSeller.id);
+        setIsSuccess(true);
+        setAlertMessage('요청한 셀러승인요청을 완료하였습니다');
         setAlertOpen(true);
         setSelectedSeller(null);
-        // 승인 후 즉시 목록 새로고침
         fetchSellers();
       } catch (error) {
         console.error('승인 처리 중 오류 발생:', error);
+        setIsSuccess(false);
+        // JSON 문자열을 파싱하여 에러 메시지 추출
+        try {
+          // API에서 반환하는 에러 메시지를 직접 표시
+          const errorMessage = error.response?.data.errMsg;
+          setAlertMessage(errorMessage || '승인 처리 중 오류가 발생했습니다');
+        } catch {
+          setAlertMessage('승인 처리 중 오류가 발생했습니다');
+        }
+        setAlertOpen(true);
       }
     }
   };
@@ -300,11 +313,13 @@ const SellerPage = () => {
         open={alertOpen}
         onClose={() => {
           setAlertOpen(false);
-          fetchSellers(); // 승인 후 목록 새로고침
+          if (isSuccess) {
+            fetchSellers(); // 성공한 경우에만 목록 새로고침
+          }
         }}
-        title="승인 완료"
-        message="요청한 셀러승인요청을 완료하였습니다"
-        isSuccess={true}
+        title={isSuccess ? '승인 완료' : '승인 실패'}
+        message={alertMessage}
+        isSuccess={isSuccess}
       />
     </div>
   );
