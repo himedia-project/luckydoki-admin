@@ -19,6 +19,9 @@ import {
   TableRow,
   TextField,
   Typography,
+  Dialog,
+  DialogContent,
+  LinearProgress,
 } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import React, { useEffect, useState, useRef } from 'react';
@@ -90,6 +93,9 @@ const ProductPage = () => {
   const tableContainerRef = useRef(null);
   const { handleMouseDown, dragScrollStyles, isDragging } =
     useDragScroll(tableContainerRef);
+
+  // 상태 추가
+  const [progressStatus, setProgressStatus] = useState('');
 
   const fetchProducts = async () => {
     const params = {
@@ -219,22 +225,39 @@ const ProductPage = () => {
   const handleFileUpload = async (file) => {
     setShowProgressModal(true);
     setUploadProgress(0);
+    setProgressStatus('파일 검증 중...'); // 새로운 상태 메시지
 
     try {
       const formData = new FormData();
       formData.append('file', file);
 
-      await registerProductExcel(formData, {
+      // 단계별 진행률 설정
+      const setProgressWithStatus = (progress, status) => {
+        setUploadProgress(progress);
+        setProgressStatus(status);
+      };
+
+      // 초기 파일 검증 단계 (0-20%)
+      setProgressWithStatus(20, '파일 검증 완료, 데이터 처리 준비 중...');
+
+      // 실제 파일 업로드 (20-50%)
+      const response = await registerProductExcel(formData, {
         onUploadProgress: (progressEvent) => {
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total,
+          const uploadProgress = Math.round(
+            (progressEvent.loaded * 30) / progressEvent.total + 20,
           );
-          setUploadProgress(progress);
+          setProgressWithStatus(uploadProgress, '데이터 서버로 전송 중...');
         },
       });
 
+      // 서버 데이터 처리 시작 알림 (50-70%)
+      setProgressWithStatus(70, '서버에서 데이터 처리 중...');
+
+      // 완료 처리
+      setProgressWithStatus(100, '업로드 완료!');
+
       setShowUploadModal(false);
-      await fetchProducts(); // 목록 새로고침
+      await fetchProducts();
       setAlertMessage('엑셀 업로드가 완료되었습니다.');
       setShowAlert(true);
     } catch (error) {
@@ -1152,7 +1175,11 @@ const ProductPage = () => {
         onClose={() => setShowUploadModal(false)}
         onUpload={handleFileUpload}
       />
-      <ProgressModal open={showProgressModal} progress={uploadProgress} />
+      <ProgressModal
+        open={showProgressModal}
+        progress={uploadProgress}
+        status={progressStatus}
+      />
 
       {/* AlertModal을 ConfirmModal로 변경 */}
       <ConfirmModal
