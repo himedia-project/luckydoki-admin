@@ -44,6 +44,8 @@ export const generateReport = async (dashboardData) => {
         monthlyPurchase: consumer.monthlyPurchase,
       })),
     },
+    dailySalesData: dashboardData.dailySalesData,
+    hourlySalesData: dashboardData.hourlySalesData,
   };
 
   const response = await axiosInstance.post('/report/generate', requestData, {

@@ -34,26 +34,6 @@ function App() {
   }, []);
 
   return (
-<<<<<<< HEAD
-    <Routes>
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/product" element={<ProductPage />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/seller" element={<SellerPage />} />
-        <Route path="/member" element={<MemberPage />} />
-        <Route path="/order" element={<OrderPage />} />
-        <Route path="/coupon" element={<CouponPage />} />
-        <Route path="/issued-coupon" element={<IssuedCouponPage />} />
-        <Route path="/event" element={<EventPage />} />
-        <Route path="/test" element={<TestPage />} />
-        <Route path="/image-test" element={<ImageTestPage />} />
-      </Route>
-      {/* 404 */}
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
-=======
     <>
       <Routes>
         <Route element={<MainLayout />}>
@@ -78,7 +58,6 @@ function App() {
         {...modalConfig}
       />
     </>
->>>>>>> bc6e82ca0d61f3448e421409e4c5e391efcf2aa2
   );
 }
 

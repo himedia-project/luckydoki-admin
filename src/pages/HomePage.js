@@ -1,30 +1,21 @@
-<<<<<<< HEAD
-import { Box, Grid, Paper, Typography } from '@mui/material';
-import React from 'react';
-import { Link } from 'react-router-dom';
-=======
 import {
+  Avatar,
   Box,
   Grid,
-  Paper,
-  Typography,
   List,
   ListItem,
   ListItemText,
-  Avatar,
-  Button,
-  Tabs,
+  Paper,
   Tab,
+  Tabs,
+  Typography,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ImageLoader from '../components/image/ImageLoader';
 import ReportGenerator from '../components/report/ReportGenerator';
->>>>>>> bc6e82ca0d61f3448e421409e4c5e391efcf2aa2
-
 import { useNavigate } from 'react-router-dom';
 import { getDashboardData } from '../api/dashBoardApi';
 import { FRONT_USER_HOST } from '../config/apiConfig';
-
 const DashboardCard = ({ title, value, secondValue, onClick, description }) => (
   <Paper
     sx={{
@@ -742,7 +733,6 @@ const HomePage = () => {
           </Paper>
         </Grid>
       </Grid>
-      <Link to={'/test'}>test</Link>
     </Box>
   );
 };
