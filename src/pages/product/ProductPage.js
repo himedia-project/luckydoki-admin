@@ -933,10 +933,19 @@ const ProductPage = () => {
             border: '1px solid #E5E5E5',
             overflowX: 'auto',
             ...dragScrollStyles,
+            // 테이블 헤더 기본 스타일
+            '& thead th': {
+              position: 'sticky',
+              top: 0,
+              backgroundColor: '#F8FFF8',
+              zIndex: 2,
+            },
+            // 고정 열 공통 스타일
             '& th.sticky, & td.sticky': {
               position: 'sticky',
               backgroundColor: 'white',
               zIndex: 1,
+              boxShadow: '2px 0 5px -2px rgba(0,0,0,0.15)',
               '&::after': {
                 content: '""',
                 position: 'absolute',
@@ -947,29 +956,30 @@ const ProductPage = () => {
                 backgroundColor: '#E5E5E5',
               },
             },
-            '& th.sticky-0, & td.sticky-0': {
-              left: 0,
-              zIndex: 2,
+            // 고정 헤더 열 특별 처리
+            '& thead th.sticky': {
+              zIndex: 4, // 고정 헤더는 가장 위에 표시
+              backgroundColor: '#F8FFF8',
             },
-            '& th.sticky-1, & td.sticky-1': {
-              left: 50,
-              zIndex: 2,
+            // 각 고정 열의 위치 설정
+            '& .sticky-0': { left: 0 }, // 체크박스
+            '& .sticky-1': { left: 50 }, // ID
+            '& .sticky-2': { left: 130 }, // 카테고리
+            '& .sticky-3': { left: 350 }, // 샵이름
+            '& .sticky-4': { left: 470 }, // 이미지
+            '& .sticky-5': { left: 590 }, // 상품명
+
+            // 스크롤 가능한 열 스타일
+            '& th:not(.sticky)': {
+              backgroundColor: '#F8FFF8',
+              zIndex: 1,
             },
-            '& th.sticky-2, & td.sticky-2': {
-              left: 130,
-              zIndex: 2,
+            // 드래그 커서 스타일
+            '&:active': {
+              cursor: 'grabbing',
             },
-            '& th.sticky-3, & td.sticky-3': {
-              left: 280,
-              zIndex: 2,
-            },
-            '& th.sticky-4, & td.sticky-4': {
-              left: 460,
-              zIndex: 2,
-            },
-            '& th.sticky-5, & td.sticky-5': {
-              left: 580,
-              zIndex: 2,
+            '&:hover': {
+              cursor: 'grab',
             },
           }}
           onMouseDown={handleMouseDown}
