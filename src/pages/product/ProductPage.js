@@ -523,9 +523,13 @@ const ProductPage = () => {
               badgeContent={notApprovedCount}
               color="error"
               showZero
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
               sx={{
                 '& .MuiBadge-badge': {
-                  right: -3,
+                  left: -3,
                   top: 3,
                   border: '2px solid #fff',
                   padding: '0 4px',
