@@ -12,6 +12,7 @@ export const getList = async (pageParam) => {
     best,
     event,
     shopId,
+    approvalStatus,
   } = pageParam;
   const response = await axiosInstance.get(`/product/list`, {
     params: {
@@ -24,6 +25,7 @@ export const getList = async (pageParam) => {
       best: best,
       event: event,
       shopId: shopId,
+      approvalStatus: approvalStatus,
     },
   });
   return response.data;
@@ -89,5 +91,21 @@ export const changeBest = async (productIds) => {
   const response = await axiosInstance.patch(`/product/best`, {
     productIds: productIds,
   });
+  return response.data;
+};
+
+// 상품 승인 신청
+// http://localhost:8080/api/admin/product/approve
+export const approveProduct = async (productIds) => {
+  const response = await axiosInstance.put(`/product/approve`, {
+    productIds: productIds,
+  });
+  return response.data;
+};
+
+// 승인 안된 상품 목록 조회
+// http://localhost:8080/api/admin/product/list/not-approved
+export const getNotApprovedList = async () => {
+  const response = await axiosInstance.get('/product/approve/list');
   return response.data;
 };

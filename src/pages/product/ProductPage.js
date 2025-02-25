@@ -27,7 +27,14 @@ import Checkbox from '@mui/material/Checkbox';
 import React, { useEffect, useState, useRef } from 'react';
 import { getChildList, getParentList } from '../../api/categoryApi';
 import { downloadProductExcel, registerProductExcel } from '../../api/excelApi';
-import { changeBest, changeIsNew, getList, remove } from '../../api/productApi';
+import {
+  changeBest,
+  changeIsNew,
+  getList,
+  remove,
+  approveProduct,
+  getNotApprovedList,
+} from '../../api/productApi';
 import { getShopOptionList } from '../../api/shopApi';
 import AlertModal from '../../components/common/AlertModal';
 import ConfirmModal from '../../components/common/ConfirmModal';
@@ -77,6 +84,7 @@ const ProductPage = () => {
     isNew: '',
     best: '',
     event: '',
+    approvalStatus: '',
   });
 
   // Add new state for sort and size
@@ -88,6 +96,7 @@ const ProductPage = () => {
   const [selectedShopId, setSelectedShopId] = useState('');
 
   const [totalCount, setTotalCount] = useState(0); // 추가: 총 상품 수를 저장할 state
+  const [notApprovedCount, setNotApprovedCount] = useState(0);
 
   // 드래그 스크롤 관련 상태와 핸들러 추가
   const tableContainerRef = useRef(null);
@@ -108,6 +117,7 @@ const ProductPage = () => {
       best: filters.best || null,
       event: filters.event || null,
       shopId: selectedShopId || null,
+      approvalStatus: filters.approvalStatus || null,
     };
 
     try {
@@ -121,21 +131,23 @@ const ProductPage = () => {
     }
   };
 
+  // 승인 대기 상품 목록 조회 및 카운트 계산 함수
+  const fetchNotApprovedCount = async () => {
+    try {
+      const response = await getNotApprovedList();
+      setNotApprovedCount(response.length || 0); // 배열의 길이를 카운트로 사용
+    } catch (error) {
+      console.error('승인 대기 상품 목록 조회 실패:', error);
+      setNotApprovedCount(0);
+    }
+  };
+
   useEffect(() => {
     loadParentCategories();
     loadShops();
     fetchProducts();
-  }, [
-    // ☑️ 페이지네이션을 위해서 의존성 배열에 넣음
-    page,
-    pageSize,
-    // ❗검색버튼을 클릭해야 진행! 의존성 배열에 넣으면 안됨
-    // sortOrder,
-    // searchKeyword,
-    // selectedChildId,
-    // filters,
-    // selectedShopId,
-  ]);
+    fetchNotApprovedCount();
+  }, []);
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -213,6 +225,7 @@ const ProductPage = () => {
       isNew: '',
       best: '',
       event: '',
+      approvalStatus: '',
     });
     setSortOrder('desc');
     setPageSize(10);
@@ -467,6 +480,27 @@ const ProductPage = () => {
     }
   };
 
+  // 승인 요청 핸들러 추가
+  const handleApproveRequest = async () => {
+    if (!selectedProducts.length) {
+      setAlertMessage('상품을 먼저 선택해주세요.');
+      setShowAlert(true);
+      return;
+    }
+
+    try {
+      await approveProduct(selectedProducts);
+      setAlertMessage('승인 요청이 완료되었습니다.');
+      setShowAlert(true);
+      fetchProducts();
+      fetchNotApprovedCount(); // 승인 요청 후 카운트 새로고침
+    } catch (error) {
+      console.error('승인 요청 실패:', error);
+      setAlertMessage('승인 요청 중 오류가 발생했습니다.');
+      setShowAlert(true);
+    }
+  };
+
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -484,6 +518,17 @@ const ProductPage = () => {
             </Typography>
           </Box>
           <Box>
+            <Button
+              variant="contained"
+              onClick={handleApproveRequest}
+              sx={{
+                backgroundColor: '#2196F3',
+                '&:hover': { backgroundColor: '#1976D2' },
+                mr: 1,
+              }}
+            >
+              승인 요청
+            </Button>
             <Button
               variant="contained"
               onClick={handleNewStatusChange}
@@ -723,7 +768,7 @@ const ProductPage = () => {
             {/* 상태 필터 영역 */}
             <Grid item xs={12}>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     select
                     fullWidth
@@ -744,7 +789,7 @@ const ProductPage = () => {
                     <MenuItem value="N">일반상품</MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     select
                     fullWidth
@@ -765,7 +810,7 @@ const ProductPage = () => {
                     <MenuItem value="N">일반상품</MenuItem>
                   </TextField>
                 </Grid>
-                <Grid item xs={12} md={4}>
+                <Grid item xs={12} md={3}>
                   <TextField
                     select
                     fullWidth
@@ -784,6 +829,27 @@ const ProductPage = () => {
                     <MenuItem value="">전체</MenuItem>
                     <MenuItem value="Y">이벤트상품</MenuItem>
                     <MenuItem value="N">일반상품</MenuItem>
+                  </TextField>
+                </Grid>
+                <Grid item xs={12} md={3}>
+                  <TextField
+                    select
+                    fullWidth
+                    size="small"
+                    label="승인 여부"
+                    value={filters.approvalStatus}
+                    onChange={handleFilterChange('approvalStatus')}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#00DE90',
+                        },
+                      },
+                    }}
+                  >
+                    <MenuItem value="">전체</MenuItem>
+                    <MenuItem value="Y">승인완료</MenuItem>
+                    <MenuItem value="N">미승인</MenuItem>
                   </TextField>
                 </Grid>
               </Grid>
