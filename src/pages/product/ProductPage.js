@@ -22,6 +22,7 @@ import {
   Dialog,
   DialogContent,
   LinearProgress,
+  Badge,
 } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import React, { useEffect, useState, useRef } from 'react';
@@ -518,17 +519,31 @@ const ProductPage = () => {
             </Typography>
           </Box>
           <Box>
-            <Button
-              variant="contained"
-              onClick={handleApproveRequest}
+            <Badge
+              badgeContent={notApprovedCount}
+              color="error"
+              showZero
               sx={{
-                backgroundColor: '#2196F3',
-                '&:hover': { backgroundColor: '#1976D2' },
-                mr: 1,
+                '& .MuiBadge-badge': {
+                  right: -3,
+                  top: 3,
+                  border: '2px solid #fff',
+                  padding: '0 4px',
+                },
               }}
             >
-              승인 요청
-            </Button>
+              <Button
+                variant="contained"
+                onClick={handleApproveRequest}
+                sx={{
+                  backgroundColor: '#2196F3',
+                  '&:hover': { backgroundColor: '#1976D2' },
+                  mr: 1,
+                }}
+              >
+                승인 요청
+              </Button>
+            </Badge>
             <Button
               variant="contained"
               onClick={handleNewStatusChange}
