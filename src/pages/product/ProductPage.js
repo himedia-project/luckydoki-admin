@@ -550,8 +550,8 @@ const ProductPage = () => {
                 variant="contained"
                 onClick={handleApproveRequest}
                 sx={{
-                  backgroundColor: '#2196F3',
-                  '&:hover': { backgroundColor: '#1976D2' },
+                  backgroundColor: '#FF6B6B',
+                  '&:hover': { backgroundColor: '#FF5252' },
                   mr: 1,
                 }}
               >
@@ -1020,6 +1020,12 @@ const ProductPage = () => {
                 </TableCell>
                 <TableCell
                   align="center"
+                  sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
+                >
+                  승인여부
+                </TableCell>
+                <TableCell
+                  align="center"
                   sx={{ minWidth: 220, fontWeight: 'bold', color: '#1A1A1A' }}
                   className="sticky sticky-2"
                 >
@@ -1088,7 +1094,6 @@ const ProductPage = () => {
                 >
                   재고
                 </TableCell>
-
                 <TableCell
                   align="center"
                   sx={{ minWidth: 180, fontWeight: 'bold', color: '#1A1A1A' }}
@@ -1161,6 +1166,18 @@ const ProductPage = () => {
                     </TableCell>
                     <TableCell
                       align="center"
+                      sx={{
+                        color:
+                          product.approvalStatus === 'Y'
+                            ? '#4CAF50'
+                            : '#FF6B6B',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {product.approvalStatus === 'Y' ? '승인완료' : '미승인'}
+                    </TableCell>
+                    <TableCell
+                      align="center"
                       className="sticky sticky-2"
                       style={{ minWidth: '200px' }} // 최소 너비 설정
                     >
@@ -1224,7 +1241,6 @@ const ProductPage = () => {
                       {product.discountPrice?.toLocaleString()}원
                     </TableCell>
                     <TableCell align="center">{product.stockNumber}</TableCell>
-
                     <TableCell align="center">{product.createdAt}</TableCell>
                     <TableCell align="center">{product.modifiedAt}</TableCell>
                     <TableCell align="center">
