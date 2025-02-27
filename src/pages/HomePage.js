@@ -611,6 +611,7 @@ const HomePage = () => {
               p: 3,
               borderRadius: 2,
               boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+              height: '100%',
             }}
           >
             <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
@@ -654,7 +655,7 @@ const HomePage = () => {
               >
                 리뷰 평점 + 리뷰수 + 좋아요 + 구매율 기준
               </Typography>
-              <List sx={{ maxHeight: 400, overflow: 'auto', px: 1, mt: 2 }}>
+              <List sx={{ height: 420, overflow: 'auto', px: 1, mt: 2 }}>
                 {dashboardData.top10Products.map((product, index) => (
                   <ProductCard
                     key={product.id}
@@ -682,7 +683,7 @@ const HomePage = () => {
               >
                 댓글 + 조회수 기준
               </Typography>
-              <List sx={{ maxHeight: 400, overflow: 'auto', px: 1, mt: 2 }}>
+              <List sx={{ height: 420, overflow: 'auto', px: 1, mt: 2 }}>
                 {dashboardData.top10Communities.map((community, index) => (
                   <CommunityCard
                     key={community.id}
@@ -700,6 +701,7 @@ const HomePage = () => {
               p: 3,
               borderRadius: 2,
               boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+              height: '100%',
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -722,10 +724,10 @@ const HomePage = () => {
                   border: '1px solid rgba(0, 222, 144, 0.2)',
                 }}
               >
-                판매량 +판매액 기준
+                판매량 + 판매액 기준
               </Typography>
             </Box>
-            <List sx={{ px: 1 }}>
+            <List sx={{ height: 420, px: 1 }}>
               {[...Array(5)].map((_, index) => (
                 <UserCard
                   key={dashboardData.top5Sellers[index]?.email || index}
@@ -743,6 +745,7 @@ const HomePage = () => {
               p: 3,
               borderRadius: 2,
               boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+              height: '100%',
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
@@ -765,10 +768,10 @@ const HomePage = () => {
                   border: '1px solid rgba(0, 222, 144, 0.2)',
                 }}
               >
-                리뷰 수 기준
+                구매 + 리뷰 수 기준
               </Typography>
             </Box>
-            <List sx={{ px: 1 }}>
+            <List sx={{ height: 420, px: 1 }}>
               {[...Array(5)].map((_, index) => (
                 <UserCard
                   key={dashboardData.top5GoodConsumers[index]?.email || index}
