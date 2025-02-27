@@ -55,12 +55,40 @@ const DashboardCard = ({ title, value, secondValue, onClick, description }) => (
       )}
     </Box>
     {secondValue ? (
-      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'baseline',
+          gap: 1,
+          flexWrap: 'wrap',
+          wordBreak: 'break-word',
+        }}
+      >
         <Typography
           variant="h4"
           sx={{
             color: '#00DE90',
             fontWeight: 'bold',
+            wordBreak: 'break-word',
+            fontSize: { xs: '1.5rem', sm: '2rem' },
+            position: 'relative',
+            display: 'inline-block',
+            '&::after': onClick && {
+              content: '""',
+              position: 'absolute',
+              width: '100%',
+              height: '2px',
+              bottom: 0,
+              left: 0,
+              backgroundColor: '#00DE90',
+              transform: 'scaleX(0)',
+              transformOrigin: 'bottom right',
+              transition: 'transform 0.3s ease',
+            },
+            '&:hover::after': onClick && {
+              transform: 'scaleX(1)',
+              transformOrigin: 'bottom left',
+            },
           }}
         >
           {value}
@@ -79,6 +107,26 @@ const DashboardCard = ({ title, value, secondValue, onClick, description }) => (
           sx={{
             color: '#00DE90',
             fontWeight: 'bold',
+            wordBreak: 'break-word',
+            fontSize: { xs: '1.5rem', sm: '2rem' },
+            position: 'relative',
+            display: 'inline-block',
+            '&::after': onClick && {
+              content: '""',
+              position: 'absolute',
+              width: '100%',
+              height: '2px',
+              bottom: 0,
+              left: 0,
+              backgroundColor: '#00DE90',
+              transform: 'scaleX(0)',
+              transformOrigin: 'bottom right',
+              transition: 'transform 0.3s ease',
+            },
+            '&:hover::after': onClick && {
+              transform: 'scaleX(1)',
+              transformOrigin: 'bottom left',
+            },
           }}
         >
           {secondValue}
