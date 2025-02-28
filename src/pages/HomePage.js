@@ -9,6 +9,7 @@ import {
   Tab,
   Tabs,
   Typography,
+  Dialog,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ImageLoader from '../components/image/ImageLoader';
@@ -16,6 +17,8 @@ import ReportGenerator from '../components/report/ReportGenerator';
 import { useNavigate } from 'react-router-dom';
 import { getDashboardData } from '../api/dashBoardApi';
 import { FRONT_USER_HOST } from '../config/apiConfig';
+import useCustomLogin from '../hooks/useCustomLogin';
+
 const DashboardCard = ({ title, value, secondValue, onClick, description }) => (
   <Paper
     sx={{
@@ -516,19 +519,32 @@ const HomePage = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
+  const [open, setOpen] = useState(false);
+
+  const { email, checkLoginAndNavigate, handleApiError } = useCustomLogin();
 
   useEffect(() => {
-    const fetchData = async () => {
+    // 로그인 상태 확인 함수
+    const checkLoginAndFetchData = async () => {
+      // 로그인 체크
+      if (!checkLoginAndNavigate('/')) {
+        return;
+      }
+
       try {
         const response = await getDashboardData();
         console.log('getDashboardData response', response);
         setDashboardData(response.data);
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
+        handleApiError(error);
       }
     };
-    fetchData();
-  }, []);
+
+    checkLoginAndFetchData();
+
+    // 의존성 배열에서 함수 제거
+  }, []); // 빈 의존성 배열 - 컴포넌트 마운트 시에만 실행
 
   if (!dashboardData) return null;
 
@@ -552,7 +568,45 @@ const HomePage = () => {
         <Typography variant="h5" sx={{ color: '#333', fontWeight: 'bold' }}>
           관리자 대시보드
         </Typography>
+        <Box
+          component="button"
+          onClick={() => setOpen(true)}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            bgcolor: '#00DE90',
+            color: 'white',
+            border: 'none',
+            borderRadius: 2,
+            px: 2.5,
+            py: 1.2,
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 4px 12px rgba(0, 222, 144, 0.2)',
+            '&:hover': {
+              bgcolor: '#00BA78',
+              transform: 'translateY(-2px)',
+              boxShadow: '0 6px 16px rgba(0, 222, 144, 0.3)',
+            },
+          }}
+        >
+          <Typography sx={{ fontSize: '0.95rem' }}>AI 생성 리포트</Typography>
+        </Box>
       </Box>
+
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <ReportGenerator
+          dashboardData={dashboardData}
+          onClose={() => setOpen(false)}
+        />
+      </Dialog>
 
       <ReportGenerator dashboardData={dashboardData} />
 
