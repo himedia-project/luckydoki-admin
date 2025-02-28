@@ -9,6 +9,7 @@ import {
   Tab,
   Tabs,
   Typography,
+  Dialog,
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ImageLoader from '../components/image/ImageLoader';
@@ -516,6 +517,11 @@ const HomePage = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -554,7 +560,13 @@ const HomePage = () => {
         </Typography>
       </Box>
 
-      <ReportGenerator dashboardData={dashboardData} />
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="report-dialog-title"
+      >
+        <ReportGenerator dashboardData={dashboardData} />
+      </Dialog>
 
       {dashboardData.sellerNotApprovedRequestCount > 0 && (
         <NotificationCard
