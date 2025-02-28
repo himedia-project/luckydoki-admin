@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import StoreIcon from '@mui/icons-material/Store';
@@ -11,50 +11,19 @@ import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import CelebrationIcon from '@mui/icons-material/Celebration';
 import ImageIcon from '@mui/icons-material/Image';
 
-import { logoutPost } from '../api/loginApi';
-import { logout } from '../app/redux/loginSlice';
 import AlertModal from '../components/common/AlertModal';
+import useCustomLogin from '../hooks/useCustomLogin';
 
 const Header = () => {
-  const { email } = useSelector((state) => state.loginSlice);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const [openAlert, setOpenAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [isSuccess, setIsSuccess] = useState(true);
-
-  const handleLogout = async () => {
-    try {
-      await logoutPost();
-      dispatch(logout());
-      setAlertMessage('로그아웃이 되었습니다');
-      setIsSuccess(true);
-      setOpenAlert(true);
-    } catch (error) {
-      setAlertMessage('로그아웃 처리 중 오류가 발생했습니다');
-      setIsSuccess(false);
-      setOpenAlert(true);
-    }
-  };
-
-  const checkLoginAndNavigate = (path) => {
-    if (!email) {
-      setAlertMessage('로그인을 해주세요!');
-      setIsSuccess(false);
-      setOpenAlert(true);
-      return false;
-    }
-    navigate(path);
-    return true;
-  };
-
-  const handleCloseAlert = () => {
-    setOpenAlert(false);
-    if (!email) {
-      navigate('/login');
-    }
-  };
+  const {
+    email,
+    openAlert,
+    alertMessage,
+    isSuccess,
+    handleLogout,
+    checkLoginAndNavigate,
+    handleCloseAlert,
+  } = useCustomLogin();
 
   return (
     <>
