@@ -971,13 +971,14 @@ const ProductPage = () => {
               zIndex: 4, // 고정 헤더는 가장 위에 표시
               backgroundColor: '#F8FFF8',
             },
-            // 각 고정 열의 위치 설정
-            '& .sticky-0': { left: 0 }, // 체크박스
-            '& .sticky-1': { left: 50 }, // ID
-            '& .sticky-2': { left: 130 }, // 카테고리
-            '& .sticky-3': { left: 350 }, // 샵이름
-            '& .sticky-4': { left: 470 }, // 이미지
-            '& .sticky-5': { left: 590 }, // 상품명
+            // 각 고정 열의 위치 설정 - 정확한 너비 계산
+            '& .sticky-0': { left: 0 }, // 체크박스 (너비: 50px)
+            '& .sticky-1': { left: 50 }, // ID (너비: 80px)
+            '& .sticky-2': { left: 130 }, // 승인여부 (너비: 120px)
+            '& .sticky-3': { left: 250 }, // 카테고리 (너비: 220px)
+            '& .sticky-4': { left: 470 }, // 샵이름 (너비: 120px)
+            '& .sticky-5': { left: 590 }, // 이미지 (너비: 120px)
+            '& .sticky-6': { left: 710 }, // 상품명 (너비: 250px)
 
             // 스크롤 가능한 열 스타일
             '& th:not(.sticky)': {
@@ -1021,34 +1022,35 @@ const ProductPage = () => {
                 <TableCell
                   align="center"
                   sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
+                  className="sticky sticky-2"
                 >
                   승인여부
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ minWidth: 220, fontWeight: 'bold', color: '#1A1A1A' }}
-                  className="sticky sticky-2"
+                  className="sticky sticky-3"
                 >
                   카테고리
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
-                  className="sticky sticky-3"
+                  className="sticky sticky-4"
                 >
                   샵이름
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ minWidth: 120, fontWeight: 'bold', color: '#1A1A1A' }}
-                  className="sticky sticky-4"
+                  className="sticky sticky-5"
                 >
                   이미지
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ minWidth: 250, fontWeight: 'bold', color: '#1A1A1A' }}
-                  className="sticky sticky-5"
+                  className="sticky sticky-6"
                 >
                   상품명
                 </TableCell>
@@ -1166,6 +1168,7 @@ const ProductPage = () => {
                     </TableCell>
                     <TableCell
                       align="center"
+                      className="sticky sticky-2"
                       sx={{
                         color:
                           product.approvalStatus === 'Y'
@@ -1178,15 +1181,15 @@ const ProductPage = () => {
                     </TableCell>
                     <TableCell
                       align="center"
-                      className="sticky sticky-2"
+                      className="sticky sticky-3"
                       style={{ minWidth: '200px' }} // 최소 너비 설정
                     >
                       {product.categoryAllName}
                     </TableCell>
-                    <TableCell align="center" className="sticky sticky-3">
+                    <TableCell align="center" className="sticky sticky-4">
                       {product.shopName}
                     </TableCell>
-                    <TableCell align="center" className="sticky sticky-4">
+                    <TableCell align="center" className="sticky sticky-5">
                       {product.uploadFileNames?.[0] && (
                         <ImageLoader
                           imagePath={product.uploadFileNames[0]}
@@ -1201,7 +1204,7 @@ const ProductPage = () => {
                         />
                       )}
                     </TableCell>
-                    <TableCell align="center" className="sticky sticky-5">
+                    <TableCell align="center" className="sticky sticky-6">
                       {product.name}
                     </TableCell>
                     <TableCell
