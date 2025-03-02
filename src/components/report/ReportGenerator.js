@@ -154,7 +154,15 @@ const ReportGenerator = ({ dashboardData }) => {
               AI 리포트 생성
             </Typography>
             <Typography variant="body1" sx={{ color: '#718096', mb: 4 }}>
-              이번달 현재까지의 리포트가 생성됩니다.
+              최근 한달간(
+              {
+                new Date(new Date().setMonth(new Date().getMonth() - 1))
+                  .toISOString()
+                  .split('T')[0]
+              }{' '}
+              ~ {new Date().toISOString().split('T')[0]})
+              <br />
+              리포트가 생성됩니다.
             </Typography>
             <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
               <Button

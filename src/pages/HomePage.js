@@ -596,18 +596,6 @@ const HomePage = () => {
         </Box>
       </Box>
 
-      <Dialog
-        open={open}
-        onClose={() => setOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <ReportGenerator
-          dashboardData={dashboardData}
-          onClose={() => setOpen(false)}
-        />
-      </Dialog>
-
       <ReportGenerator dashboardData={dashboardData} />
 
       {dashboardData.sellerNotApprovedRequestCount > 0 && (

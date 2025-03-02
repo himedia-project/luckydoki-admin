@@ -9,8 +9,12 @@ const axiosInstance = axios.create({
 export const generateReport = async (dashboardData) => {
   console.log('generateReport dashboardData: ', dashboardData);
   const requestData = {
-    startDate: new Date(new Date().setDate(1)).toISOString().split('T')[0], // 이번달 1일
-    endDate: new Date().toISOString().split('T')[0], // 오늘
+    // 1달 전 날짜를 시작일로 설정
+    startDate: new Date(new Date().setMonth(new Date().getMonth() - 1))
+      .toISOString()
+      .split('T')[0],
+    // 오늘 날짜를 종료일로 설정
+    endDate: new Date().toISOString().split('T')[0],
     metrics: {
       totalOrderCount: dashboardData.totalOrderCount,
       monthlyRevenue: dashboardData.monthlyRevenue,
