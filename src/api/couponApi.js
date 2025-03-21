@@ -32,7 +32,7 @@ export const create = async (coupon) => {
 //     ]
 // }
 export const issueCoupon = async (couponId, emails) => {
-  const response = await axiosInstance.post(`/coupon/${couponId}/issue`, {
+  const response = await axiosInstance.post(`/coupon/${couponId}/mass-issue`, {
     emails: emails,
   });
   return response.data;
