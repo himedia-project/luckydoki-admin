@@ -19,9 +19,6 @@ import {
   TableRow,
   TextField,
   Typography,
-  Dialog,
-  DialogContent,
-  LinearProgress,
   Badge,
 } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
@@ -35,6 +32,7 @@ import {
   remove,
   approveProduct,
   getNotApprovedList,
+  deleteAll,
 } from '../../api/productApi';
 import { getShopOptionList } from '../../api/shopApi';
 import AlertModal from '../../components/common/AlertModal';
@@ -66,8 +64,6 @@ const ProductPage = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showProgressModal, setShowProgressModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -106,6 +102,12 @@ const ProductPage = () => {
 
   // 상태 추가
   const [progressStatus, setProgressStatus] = useState('');
+
+  // 새로운 state 추가 (useState 부분에 추가)
+  const [isDeleteMultipleModalOpen, setIsDeleteMultipleModalOpen] =
+    useState(false);
+
+  const [progressTitle, setProgressTitle] = useState('엑셀 파일 업로드 중');
 
   const fetchProducts = async () => {
     const params = {
@@ -249,7 +251,8 @@ const ProductPage = () => {
   const handleFileUpload = async (file) => {
     setShowProgressModal(true);
     setUploadProgress(0);
-    setProgressStatus('파일 검증 중...'); // 새로운 상태 메시지
+    setProgressStatus('파일 검증 중...');
+    setProgressTitle('엑셀 파일 업로드 중');
 
     try {
       const formData = new FormData();
@@ -303,6 +306,7 @@ const ProductPage = () => {
 
     setShowProgressModal(true);
     setUploadProgress(0);
+    setProgressTitle('엑셀 파일 다운로드 중');
 
     try {
       const response = await downloadProductExcel(selectedProducts, {
@@ -512,6 +516,66 @@ const ProductPage = () => {
     }
   };
 
+  // handleDeleteSelected 함수 추가 (엑셀 업로드 핸들러 근처에 추가)
+  // 선택된 상품 일괄 삭제 핸들러
+  const handleDeleteSelected = () => {
+    if (!selectedProducts.length) {
+      setAlertMessage('상품을 먼저 선택해주세요.');
+      setShowAlert(true);
+      return;
+    }
+
+    setIsDeleteMultipleModalOpen(true);
+  };
+
+  // 선택된 상품 일괄 삭제 확인 핸들러
+  const handleDeleteMultipleConfirm = async () => {
+    try {
+      setShowProgressModal(true);
+      setUploadProgress(0);
+      setProgressStatus('삭제 중입니다. 잠시만 기다려주세요...');
+      setProgressTitle('상품 삭제 중');
+
+      // 진행률 시뮬레이션 (실제 진행상황은 서버에서 알 수 없음)
+      const interval = setInterval(() => {
+        setUploadProgress((prev) => {
+          if (prev >= 90) {
+            clearInterval(interval);
+            return 90;
+          }
+          return prev + 10;
+        });
+      }, 500);
+
+      await deleteAll(selectedProducts);
+
+      // 진행률 인터벌 클리어 및 완료 표시
+      clearInterval(interval);
+      setUploadProgress(100);
+      setProgressStatus('삭제 완료!');
+
+      // 1초 후 진행 모달 닫기
+      setTimeout(() => {
+        setShowProgressModal(false);
+        setAlertMessage(
+          `${selectedProducts.length}개의 상품이 성공적으로 삭제되었습니다.`,
+        );
+        setShowAlert(true);
+        setSelectedProducts([]); // 선택된 상품 초기화
+        fetchProducts(); // 목록 새로고침
+      }, 1000);
+    } catch (error) {
+      console.error('상품 일괄 삭제 실패:', error);
+      const errorMessage =
+        error.response?.data?.errMsg || '상품 삭제 중 오류가 발생했습니다.';
+      setAlertMessage(errorMessage);
+      setShowAlert(true);
+      setShowProgressModal(false);
+    } finally {
+      setIsDeleteMultipleModalOpen(false);
+    }
+  };
+
   return (
     <div style={{ backgroundColor: '#F5FFF5', minHeight: '100vh' }}>
       <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -619,6 +683,20 @@ const ProductPage = () => {
           <Typography variant="h9" sx={{ color: '#666' }}>
             검색된 총 상품 수: <strong>{totalCount}</strong>개
           </Typography>
+          {selectedProducts.length > 0 && (
+            <Button
+              variant="contained"
+              startIcon={<DeleteIcon />}
+              onClick={handleDeleteSelected}
+              sx={{
+                ml: 2,
+                backgroundColor: '#FF6B6B',
+                '&:hover': { backgroundColor: '#FF5252' },
+              }}
+            >
+              선택삭제 ({selectedProducts.length})
+            </Button>
+          )}
         </Box>
 
         {/* 검색 영역 수정 */}
@@ -1303,6 +1381,7 @@ const ProductPage = () => {
         open={showProgressModal}
         progress={uploadProgress}
         status={progressStatus}
+        title={progressTitle}
       />
 
       {/* AlertModal을 ConfirmModal로 변경 */}
@@ -1312,6 +1391,13 @@ const ProductPage = () => {
         onConfirm={handleDeleteConfirm}
         title="상품 삭제"
         message={`'${selectedProduct?.name}' 상품을 삭제하시겠습니까?`}
+      />
+      <ConfirmModal
+        open={isDeleteMultipleModalOpen}
+        onClose={() => setIsDeleteMultipleModalOpen(false)}
+        onConfirm={handleDeleteMultipleConfirm}
+        title="상품 일괄 삭제"
+        message={`선택한 ${selectedProducts.length}개의 상품을 삭제하시겠습니까?`}
       />
     </div>
   );

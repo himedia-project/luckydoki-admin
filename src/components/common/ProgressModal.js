@@ -10,7 +10,12 @@ import {
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-const ProgressModal = ({ open, progress, status }) => {
+const ProgressModal = ({
+  open,
+  progress,
+  status,
+  title = '엑셀 파일 업로드 중',
+}) => {
   return (
     <Dialog
       open={open}
@@ -63,7 +68,7 @@ const ProgressModal = ({ open, progress, status }) => {
               color: '#2D3748',
             }}
           >
-            엑셀 파일 업로드 중
+            {title}
           </Typography>
           <Typography
             variant="body2"

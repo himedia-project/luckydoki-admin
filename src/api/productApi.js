@@ -70,6 +70,17 @@ export const remove = async (productId) => {
   return response.data;
 };
 
+// 전체 삭제 DELETE http://localhost:8080/api/admin/product/all
+// productIds 배열로 받아오기
+export const deleteAll = async (productIds) => {
+  const response = await axiosInstance.delete('/product/all', {
+    data: {
+      productIds: productIds,
+    },
+  });
+  return response.data;
+};
+
 // is-new 변경
 // localhost:8080/api/admin/product/best
 // {
