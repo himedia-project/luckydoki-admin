@@ -221,7 +221,7 @@ const ChatbotPage = () => {
                   align="center"
                   sx={{ fontWeight: 'bold', color: '#1A1A1A' }}
                 >
-                  이메일
+                  사용자
                 </TableCell>
                 <TableCell
                   align="center"
