@@ -1,25 +1,25 @@
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 
-import NotFoundPage from './pages/NotFoundPage';
 import MainLayout from './layouts/MainLayout';
-import ProductPage from './pages/product/ProductPage';
 import MemberPage from './pages/member/MemberPage';
+import NotFoundPage from './pages/NotFoundPage';
+import ProductPage from './pages/product/ProductPage';
 
-import OrderPage from './pages/order/OrderPage';
+import { useEffect, useState } from 'react';
+import AlertModal from './components/common/AlertModal';
 import CouponPage from './pages/coupon/CouponPage';
-import EventPage from './pages/event/EventPage';
-import LoginPage from './pages/login/LoginPage';
 import IssuedCouponPage from './pages/coupon/IssuedCouponPage';
+import EventPage from './pages/event/EventPage';
+import ImageTestPage from './pages/ImageTestPage';
+import LoginPage from './pages/login/LoginPage';
+import OrderPage from './pages/order/OrderPage';
 import SellerPage from './pages/shop/SellerPage';
 import ShopPage from './pages/shop/ShopPage';
-import TestPage from './pages/TestPage';
-import ImageTestPage from './pages/ImageTestPage';
-import AlertModal from './components/common/AlertModal';
-import { useState, useEffect } from 'react';
 
 function App() {
+  console.log('APP 실행시, API URL:', process.env.REACT_APP_API_URL);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalConfig, setModalConfig] = useState({});
 
