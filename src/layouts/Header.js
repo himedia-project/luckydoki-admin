@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -13,6 +13,7 @@ import {
   ListItemText,
   styled,
   Tooltip,
+  Container,
 } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -66,6 +67,7 @@ const Header = () => {
   } = useCustomLogin();
 
   const navigate = useNavigate();
+  const location = useLocation();
   const [activePath, setActivePath] = useState(window.location.pathname);
   const [expanded, setExpanded] = useState(false);
 
@@ -89,8 +91,16 @@ const Header = () => {
     checkLoginAndNavigate(path);
   };
 
+  // 현재 경로를 감지하여 활성 메뉴 업데이트
+  useEffect(() => {
+    // URL이 변경되면 현재 경로를 기준으로 활성 메뉴 업데이트
+    setActivePath(
+      location.pathname === '/' ? '/' : '/' + location.pathname.split('/')[1],
+    );
+  }, [location.pathname]);
+
   return (
-    <>
+    <Box sx={{ display: 'flex' }}>
       <AppBar
         position="fixed"
         sx={{
@@ -214,15 +224,25 @@ const Header = () => {
         </Box>
       </Drawer>
 
+      {/* 페이지 콘텐츠를 위한 메인 영역 */}
       <Box
+        component="main"
         sx={{
-          marginLeft: expanded ? expandedWidth + 'px' : collapsedWidth + 'px',
+          flexGrow: 1,
+          padding: 3,
+          width: {
+            sm: `calc(100% - ${expanded ? expandedWidth : collapsedWidth}px)`,
+            xs: '100%',
+          },
+          minHeight: 'calc(100vh - 64px)',
           marginTop: '64px',
-          p: 3,
-          transition: 'margin-left 0.3s ease',
+          transition: 'width 0.3s ease, margin-left 0.3s ease',
+          overflowX: 'hidden',
         }}
       >
-        {/* 메인 콘텐츠가 들어갈 자리 */}
+        <Container maxWidth="xl" sx={{ py: 2 }}>
+          <Outlet /> {/* React Router v6의 중첩 라우트를 위한 Outlet */}
+        </Container>
       </Box>
 
       <AlertModal
@@ -232,7 +252,7 @@ const Header = () => {
         message={alertMessage}
         isSuccess={isSuccess}
       />
-    </>
+    </Box>
   );
 };
 
