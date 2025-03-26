@@ -24,6 +24,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import CelebrationIcon from '@mui/icons-material/Celebration';
 import ImageIcon from '@mui/icons-material/Image';
+import ChatIcon from '@mui/icons-material/Chat';
 
 import AlertModal from '../components/common/AlertModal';
 import useCustomLogin from '../hooks/useCustomLogin';
@@ -83,6 +84,7 @@ const Header = () => {
     { text: '주문', icon: <ShoppingCartIcon />, path: '/order' },
     { text: '쿠폰', icon: <LocalActivityIcon />, path: '/coupon' },
     { text: '이벤트', icon: <CelebrationIcon />, path: '/event' },
+    { text: '챗봇', icon: <ChatIcon />, path: '/chatbot' },
     { text: '이미지 테스트', icon: <ImageIcon />, path: '/image-test' },
   ];
 

@@ -11,6 +11,7 @@ import EventPage from './pages/event/EventPage';
 import ImageTestPage from './pages/ImageTestPage';
 import LoginPage from './pages/login/LoginPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ChatbotPage from './pages/chatbot/ChatbotPage';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="order/*" element={<OrderPage />} />
         <Route path="coupon/*" element={<CouponPage />} />
         <Route path="event/*" element={<EventPage />} />
+        <Route path="chatbot" element={<ChatbotPage />} />
         <Route path="image-test" element={<ImageTestPage />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
