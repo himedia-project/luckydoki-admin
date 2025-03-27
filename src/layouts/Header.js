@@ -15,7 +15,6 @@ import {
   Tooltip,
   Container,
 } from '@mui/material';
-import { useDispatch } from 'react-redux';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import Inventory2Icon from '@mui/icons-material/Inventory2';
 import StoreIcon from '@mui/icons-material/Store';
@@ -65,6 +64,10 @@ const Header = () => {
     handleLogout,
     checkLoginAndNavigate,
     handleCloseAlert,
+    handleApiError,
+    setOpenAlert,
+    setAlertMessage,
+    setIsSuccess,
   } = useCustomLogin();
 
   const navigate = useNavigate();
@@ -100,6 +103,26 @@ const Header = () => {
       location.pathname === '/' ? '/' : '/' + location.pathname.split('/')[1],
     );
   }, [location.pathname]);
+
+  // 로그인 에러 이벤트 리스너 추가
+  useEffect(() => {
+    const handleLoginErrorEvent = (event) => {
+      setAlertMessage(event.detail.message);
+      setIsSuccess(false);
+      setOpenAlert(true);
+
+      // 알림이 닫히면 로그인 페이지로 리디렉션하도록 세팅
+      // handleCloseAlert 함수에서 이미 처리하고 있습니다
+    };
+
+    // 이벤트 리스너 등록
+    window.addEventListener('loginError', handleLoginErrorEvent);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('loginError', handleLoginErrorEvent);
+    };
+  }, [setAlertMessage, setIsSuccess, setOpenAlert]);
 
   return (
     <Box sx={{ display: 'flex' }}>
