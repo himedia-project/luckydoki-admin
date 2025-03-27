@@ -8,8 +8,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import ImageLoader from '../components/image/ImageLoader';
-import { API_SERVER_HOST } from '../config/apiConfig';
-import axios from 'axios';
+import { uploadImage } from '../api/imageApi';
 
 const ImageTestPage = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -18,6 +17,7 @@ const ImageTestPage = () => {
   );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [uploadedFileName, setUploadedFileName] = useState('');
 
   const handleFileSelect = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -35,16 +35,9 @@ const ImageTestPage = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(
-        `${API_SERVER_HOST}/api/image/upload`,
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        },
-      );
-      setUploadedImagePath(response.data);
+      const fileName = await uploadImage(selectedFile);
+      setUploadedImagePath(fileName);
+      setUploadedFileName(fileName);
       setError('');
     } catch (error) {
       setError('이미지 업로드 중 오류가 발생했습니다.');
@@ -111,6 +104,11 @@ const ImageTestPage = () => {
           <Typography variant="h6" sx={{ mb: 2 }}>
             이미지 표시
           </Typography>
+          {uploadedFileName && (
+            <Typography variant="body1" sx={{ mb: 2 }}>
+              업로드된 파일명: {uploadedFileName}
+            </Typography>
+          )}
           <Box
             sx={{
               display: 'flex',
